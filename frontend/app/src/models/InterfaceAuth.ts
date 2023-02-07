@@ -1,3 +1,16 @@
+export interface AuthSlice {
+    userId: number;
+    userName: string;
+    isSuccess: boolean;
+    isLoading: boolean;
+    isLogged: boolean;
+    isError: boolean;
+    access:string | null;
+    refresh:string | null;
+    message: string;
+  }  
+
+
 export interface RegisterAcc {
     username: string;
     password:string;
@@ -11,5 +24,6 @@ export interface LoginAcc {
 
 
 export interface MyToken {
+    user_id: number;
     username: string;
 }

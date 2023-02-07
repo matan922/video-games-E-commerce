@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Game, Genre, Genre_Extracted
+from .models import Game, Genre, Genre_Extracted, Order, OrderDetail, Order
 
  
  
@@ -22,4 +22,24 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = '__all__'
-        
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderDetail
+        fields = '__all__'
+
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context['user']
+        print(user)
+        return Order.objects.create(**validated_data,user=user)
+
+
+

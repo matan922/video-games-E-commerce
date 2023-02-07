@@ -1,6 +1,6 @@
 import axios from "axios";
-import { authRegister, authLogin } from "../../globalVariables/endpoints";
-import { LoginAcc, RegisterAcc } from "../../models/InterfaceAuth";
+import { authRegister, authLogin } from "../globalVariables/endpoints";
+import { LoginAcc, RegisterAcc } from "../models/InterfaceAuth";
 
 // register user
 

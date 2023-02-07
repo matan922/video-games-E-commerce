@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import  authReducer from '../features/authenticationTry/authSlice';
-import communityReducer from '../features/community/communitySlice';
-import shopReducer from '../features/shop/shopSlice';
+import authReducer from '../Reducers/authSlice';
+import communityReducer from '../Reducers/communitySlice';
+import shopReducer from '../Reducers/shopSlice';
 
 
 

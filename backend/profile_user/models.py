@@ -14,17 +14,13 @@ class ProfileManager(models.Manager):
         return profile
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    display_name = models.CharField(max_length=25)
-    avatar = models.ImageField(upload_to='avatars/')
-    bio = models.TextField(blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    display_name = models.CharField(max_length=25, null=True)
+    avatar = models.ImageField(upload_to='avatars/',null=True)
+    bio = models.TextField(blank=True,null=True)
     joined_at = models.DateTimeField(auto_now_add=True)
     games = models.ManyToManyField(Game, null=True)
 
-    def __init__(self, *args, **kwargs):
-        super(Profile, self).__init__(*args, **kwargs)
-        self.location = "Unknown"
-        self.bio = "I'm a new user!"
 
     def __str__(self):
         return self.user.username

@@ -4,6 +4,7 @@ from . import views
 
 
 urlpatterns = [
-    path('profile/', views.ProfileRetrieveView.as_view()),
-    path('edit_prof/', views.ProfileUpdateView.as_view()),
+    path('profile/<int:pk>/', views.SingleProfile.as_view()),
+    path('profile/', views.SingleProfile.as_view()),
+    path('profiles/', views.ProfileList.as_view()),
 ]

@@ -16,6 +16,7 @@ Including another URLconf
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     path('games/', views.Games.as_view(), name='game-list'),
     path('game/<int:pk>/', views.GameDetail.as_view(), name='game-detail'),
@@ -23,4 +24,8 @@ urlpatterns = [
     path('genre/<int:pk>/', views.GenreDetail.as_view(), name='genre-detail'),
     path('genres_extracted/', views.ExtractedGenres.as_view(), name='genre-list'),
     path('genre_extracted/<int:pk>/', views.ExtractedGenreDetail.as_view(), name='genre-detail'),
+    path('orders/', views.OrderGames.as_view(), name='genre-detail'),
+    
+    # path('purchase/<str:pk>/', views.OrderGameDetail.as_view(), name='genre-detail'),
+    # path('purchase_dets/', views.OrderGamesDetails.as_view(), name='genre-detail'),
 ]

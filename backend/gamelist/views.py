@@ -1,12 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
-from .models import Game,Genre, Genre_Extracted
-from .serializers import GameSerializer, GenreSerializer, GenreExtractedSerializer
+from .models import Game,Genre, Genre_Extracted, OrderDetail, Order
+from .serializers import GameSerializer, GenreSerializer, GenreExtractedSerializer, OrderDetailSerializer, OrderSerializer
 from rest_framework import status
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 # Create your views here.
 
@@ -15,9 +16,14 @@ from django.contrib.auth.models import User
 # @permission_classes([IsAuthenticated])
 # -------------------- Games Start ------------------------
 
+
 class Games(APIView):
     def get(self, request):
-        games = Game.objects.all()
+        query = request.GET.get("search", None)
+        if query:
+            games = Game.objects.filter(game_name__icontains=query)
+        else:
+            games = Game.objects.all()
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 
@@ -29,9 +35,10 @@ class Games(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class GameDetail(APIView):
-    permission_classes = [IsAuthenticated]
-    
+
     def get_object(self, pk):
         try:
             return Game.objects.get(pk=pk)
@@ -102,3 +109,47 @@ class ExtractedGenreDetail(APIView):
 
 
 # ------------------------- Genre_Extracted End -------------------
+
+
+
+
+# @permission_classes([IsAuthenticated])
+class OrderGames(APIView):
+# see user's orders.
+    def get(self, request):
+        user= request.user
+        orders = user.order_set.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+# create a new order for the authenticated user.
+    def post(self, request):
+        # print(request.auth)
+        serializer = OrderSerializer(data=request.data, context={'user': request.user})
+        print(serializer)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # return Response({"error": "no account found"} ,status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# -----------------------------------------------------
+
+# class OrderGameDetail(APIView):
+
+#     def get(self, request, pk):
+#         orders = Order.objects.get(id=pk)
+#         print(orders)
+#         serializer = OrderSerializer(orders)
+#         return Response(serializer.data)
+
+# --------------------------------------------------------
+
+# class OrderGamesDetails(APIView):
+
+#     def get(self, request):
+#         order_detail = OrderDetail.objects.all()
+#         serializer = OrderDetailSerializer(order_detail, many=True)
+#         return Response(serializer.data)

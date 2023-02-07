@@ -12,15 +12,6 @@ from rest_framework.decorators import permission_classes, api_view
 from .serializers import LogoutSerializer
 
 
-
-
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def index(request):
-    return Response("Hello World!")
-
-
 # ------------------------- LOG IN START ------------------------- #
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -45,15 +36,15 @@ class RegisterView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get("email")
-        # if not (username and password and email):
-        #     return Response({"error": "Please provide all fields"})
-        # try:
-        #     User.objects.get(username=username)
-        #     return Response({"error": "Username already exists"})
-        # except User.DoesNotExist:
-        user = User.objects.create_user(username=username, password=password, email=email)
-        user.save()
-        return Response({"success": "User registered successfully"})
+        if not (username and password and email):
+            return Response({"error": "Please provide all fields"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            User.objects.get(username=username)
+            return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.save()
+            return Response({"success": "User registered successfully"})
 
 # ------------------------- REGISTER END ------------------------- #
 

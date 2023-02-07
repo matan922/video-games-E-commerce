@@ -4,7 +4,7 @@ import {
   selectGameList,
   getSingleGameAsync,
   selectGame,
-} from "./shopSlice";
+} from "../../Reducers/shopSlice";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Route, Routes, useParams } from "react-router";
 

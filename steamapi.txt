@@ -1,0 +1,1 @@
+https://store.steampowered.com/api/appdetails?appids={app_id}

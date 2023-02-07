@@ -1,30 +1,29 @@
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getProfileAsync } from './communitySlice'
+import { getProfileAsync } from '../../Reducers/communitySlice'
 
 
 const Community = () => {
   const dispatch = useAppDispatch()
-
+  const { number } = useParams()
 
   useEffect(() => {
-    dispatch(getProfileAsync())
+    if (number != undefined) {
+      dispatch(getProfileAsync(number))
+    }
   }, [dispatch])
 
-  // useEffect(() => {
-  //   dispatch(editProfileAsync())
-  // }, [dispatch])
-  
-  
-  const {displayName, avatar, bio, games} = useAppSelector((state) => state.community)
+
+  const { display_name, avatar, bio, games } = useAppSelector((state) => state.community)
 
 
   return (
     <div>
-        {displayName}
-        {avatar}
-        {bio}
-        {games}
+      {display_name}
+      {avatar}
+      {bio}
+      {games}
     </div>
   )
 }

@@ -8,10 +8,22 @@ export default class Game {
     publisher:string = ""
     genres:Genre[] = []
     price:number = 0
-    otherObject: any;
 }
 
 export class Genre {
     id?:number
     genre_name:string = ""
+}
+
+export interface AddToCartAction {
+    type: 'addToCart';
+    payload: any;
+  }
+  
+
+export interface orderData {
+    full_name: string;
+    address: string;
+    city: string;
+    zip: string;
 }

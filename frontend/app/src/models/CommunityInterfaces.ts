@@ -1,7 +1,11 @@
 export interface Profile {
-    displayName:string;
+    user:number;
+    id?:number;
+    profiles: Profile[];
+    display_name:string;
     avatar:string;
     bio:string;
     games:[];
-    loading:boolean;
+    isLoading:boolean;
 }
+
