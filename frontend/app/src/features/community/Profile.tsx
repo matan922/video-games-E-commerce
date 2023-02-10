@@ -15,7 +15,7 @@ const Community = () => {
   }, [dispatch])
 
 
-  const { display_name, avatar, bio, games } = useAppSelector((state) => state.community)
+  const { display_name, avatar, bio, games_bought } = useAppSelector((state) => state.community)
 
 
   return (
@@ -24,7 +24,7 @@ const Community = () => {
         {display_name}
         {avatar}
         {bio}
-        {games.map((game) => <div>{game.game_name}</div>)}
+        {/* {games_bought.map((game) => <div>{game.game_name}</div>)} */}
       </div>
     </div>
   )

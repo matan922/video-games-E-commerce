@@ -10,8 +10,8 @@ const initialState: Profile = {
     display_name: "",
     avatar: "",
     bio: "",
-    games: [],
     isLoading: false,
+    games_bought: []
 }
 
 
@@ -61,7 +61,7 @@ export const communitySlice = createSlice({
                 state.bio = action.payload.data.bio;
                 state.avatar = action.payload.data.avatar;
                 state.display_name = action.payload.data.display_name;
-                state.games = action.payload.data.games;
+                state.games_bought = action.payload.data.games_bought;
             })
             .addCase(getAllProfilesAsync.fulfilled, (state, action) => {
                 state.profiles = action.payload.data;
@@ -73,7 +73,7 @@ export const communitySlice = createSlice({
                 state.bio = action.payload.data.bio;
                 state.avatar = action.payload.data.avatar;
                 state.display_name = action.payload.data.display_name;
-                state.games = action.payload.data.games;
+                state.games_bought = action.payload.data.games_bought;
                 state.id = action.payload.data.id;
                 console.log(action.payload)
                 state.isLoading = false

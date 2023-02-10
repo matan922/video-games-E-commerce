@@ -15,7 +15,7 @@ import Game from '../../models/Games'
 
 const MyProfile = () => {
     const dispatch = useAppDispatch()
-    const { display_name, avatar, bio, games, id, isLoading } = useAppSelector((state) => state.community)
+    const { display_name, avatar, bio, games_bought, id, isLoading } = useAppSelector((state) => state.community)
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -60,7 +60,7 @@ const MyProfile = () => {
         setUserBio(e.target.value);
     };
 
-
+console.log(games_bought)
     return (
         <div >
             <div style={{ color: "#66C0F4" }}>
@@ -70,8 +70,7 @@ const MyProfile = () => {
                 <img src={avatar} /> <br />
                 <br></br>
                 Bio: {bio} <br></br>
-
-                {/* Games: {games.map((game,i) => <Link to={"/shop/game/" + game.id}>{game.game_name}</Link>)} <br /> */}
+                Games: {games_bought.map((game,i) => <Link to={"/shop/game/"}>{game}</Link>)} <br />
 
 
                 <Button variant="primary" onClick={handleShow}>

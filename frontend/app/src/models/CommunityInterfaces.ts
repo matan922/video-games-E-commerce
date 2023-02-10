@@ -7,7 +7,10 @@ export interface Profile {
     display_name:string;
     avatar:string;
     bio:string;
-    games: Game[];
+    games_bought: [];
     isLoading:boolean;
 }
 
+// export interface Games {
+
+// }
