@@ -53,42 +53,44 @@ const LoginPage = () => {
 
   return (
     <>
-      <section className="heading">
-        <h1>
-          <FaSignInAlt /> Login
-        </h1>
-        <p>Login and start gaming.</p>
-      </section>
+      <div style={{ color: "#66C0F4" }}>
+        <section className="heading">
+          <h1>
+            <FaSignInAlt /> Login
+          </h1>
+          <p>Login and start gaming.</p>
+        </section>
 
-      <section className="form">
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              name="username"
-              value={username}
-              placeholder="Enter your username"
-              onChange={onChange}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              value={password}
-              placeholder="Enter your password"
-              onChange={onChange}
-            />
-          </div>
-          <div className="form-group">
-            <button type="submit">Submit</button>
-          </div>
-        </form>
-      </section>
+        <section className="form">
+          <form onSubmit={onSubmit}>
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                id="username"
+                name="username"
+                value={username}
+                placeholder="Enter your username"
+                onChange={onChange}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                value={password}
+                placeholder="Enter your password"
+                onChange={onChange}
+              />
+            </div>
+            <div className="form-group">
+              <button type="submit">Submit</button>
+            </div>
+          </form>
+        </section>
+      </div>
     </>
   );
 };

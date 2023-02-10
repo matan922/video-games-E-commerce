@@ -24,6 +24,8 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
 class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderDetail

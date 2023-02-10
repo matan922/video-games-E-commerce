@@ -5,7 +5,7 @@ import {
   current,
 } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../app/store";
-import Game, { Genre, AddToCartAction, orderData } from "../models/Games";
+import Game, { Genre, AddToCartAction, orderData, CartInterface } from "../models/Games";
 import { getGames, getGame, searchGames, makeOrder } from "../APIs/shopAPI";
 
 
@@ -14,8 +14,9 @@ export interface ShopState {
   gamesList: Game[];
   genre: Genre[]
   game: Game;
-  cartList: any[]
+  cartList: CartInterface[]
   order: any[]
+  message: string;
 }
 
 const initialState: ShopState = {
@@ -23,7 +24,8 @@ const initialState: ShopState = {
   game: Object.create(null),
   genre: [],
   cartList: [],
-  order: []
+  order: [],
+  message: ""
 };
 
 export const getGamesAsync = createAsyncThunk("shop/getGames", async () => {
@@ -36,13 +38,8 @@ export const searchGamesAsync = createAsyncThunk("shop/searchGames", async (sear
   return response.data;
 });
 
-export const getSingleGameAsync = createAsyncThunk("shop/getGame", async (id: string) => {
-  const response = await getGame(id);
-  return response.data;
-});
-
-export const orderAsync = createAsyncThunk("shop/makeOrder", async (orderData:orderData) => {
-  const response = await makeOrder(orderData);
+export const orderAsync = createAsyncThunk("shop/makeOrder", async (data:{orderData:orderData, orderDetails:CartInterface[]}) => {
+  const response = await makeOrder(data.orderData, data.orderDetails);
   return response.data;
 });
 
@@ -50,6 +47,11 @@ export const shopSlice = createSlice({
   name: "shop",
   initialState,
   reducers: {
+
+    loadGame: (state) => {
+      state.game = JSON.parse(localStorage.getItem('currentGame') as string)
+    },
+
     loadCart: (state) => {
       if (localStorage.getItem('cart')) {
         state.cartList = JSON.parse(localStorage.getItem('cart') as string)
@@ -62,7 +64,6 @@ export const shopSlice = createSlice({
       let gameExistsInCart = state.cartList.find(g => g.id === game.id);
       if (!gameExistsInCart) {
         game = { ...game }
-
         state.cartList.push(game);
       }
       localStorage.setItem('cart', JSON.stringify(state.cartList) as string)
@@ -86,17 +87,19 @@ export const shopSlice = createSlice({
     removeAllFromCart: (state, action) => {
       state.cartList.splice(0, state.cartList.length);
       localStorage.removeItem("cart");
-    }
+    },
 
+    getGameInfo: (state, action) => {
+      state.game = action.payload;
+      console.log(state.game)
+      localStorage.setItem('currentGame', JSON.stringify(action.payload))
+    }
   },
 
   extraReducers: (builder) => {
     builder.addCase(getGamesAsync.fulfilled, (state, action) => {
       state.gamesList = action.payload;
     })
-      .addCase(getSingleGameAsync.fulfilled, (state, action) => {
-        state.game = action.payload;
-      })
       .addCase(searchGamesAsync.fulfilled, (state, action) => {
         state.gamesList = action.payload;
       })
@@ -106,7 +109,7 @@ export const shopSlice = createSlice({
   },
 });
 
-export const { loadCart, addToCart, removeFromCart, removeAllFromCart } = shopSlice.actions;
+export const { loadCart, addToCart, removeFromCart, removeAllFromCart, getGameInfo, loadGame } = shopSlice.actions;
 export const selectGameList = (state: RootState) => state.shop.gamesList;
 export const selectGame = (state: RootState) => state.shop.game;
 export const selectCartList = (state: RootState) => state.shop.cartList;

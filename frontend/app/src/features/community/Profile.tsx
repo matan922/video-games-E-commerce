@@ -20,10 +20,12 @@ const Community = () => {
 
   return (
     <div>
-      {display_name}
-      {avatar}
-      {bio}
-      {games}
+      <div style={{ color: "#66C0F4" }}>
+        {display_name}
+        {avatar}
+        {bio}
+        {games.map((game) => <div>{game.game_name}</div>)}
+      </div>
     </div>
   )
 }

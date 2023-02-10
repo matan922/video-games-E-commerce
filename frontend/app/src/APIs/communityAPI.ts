@@ -8,7 +8,6 @@ import { Profile } from "../models/CommunityInterfaces";
 export const getProfile = (id: string) => {
   return new Promise<{ data: Profile }>((resolve) =>
     axios.get(profileGet + id).then((res) => {
-      console.log({ data: res.data })
       resolve({ data: res.data })
     })
   );
@@ -17,8 +16,7 @@ export const getProfile = (id: string) => {
 export const getMyProfile = () => {
   return new Promise<{ data: Profile }>((resolve) =>
     axios.get(profileGet, getConfig()).then((res) => {
-      console.log({ data: res.data })
-      resolve({ data: res.data })
+      resolve({ data: res.data["profile"] })
     })
   );
 }
@@ -34,8 +32,8 @@ export const editMyProfile = (updateData: any) => {
 
   return new Promise<{ data: Profile }>((resolve) =>
     axios.put(profileGet, updateData, config).then((res) => {
-      console.log({ data: res.data })
-      resolve({ data: res.data })
+      console.log({ data: res.data["profile"] })
+      resolve({ data: res.data["profile"] })
     })
   );
 }
@@ -44,7 +42,6 @@ export const editMyProfile = (updateData: any) => {
 export const getAllProfiles = () => {
   return new Promise<{ data: Profile[] }>((resolve) =>
     axios.get(allProfilesGet).then((res) => {
-      console.log({ data: res.data })
       resolve({ data: res.data })
     })
   )

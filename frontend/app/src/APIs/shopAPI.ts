@@ -2,7 +2,7 @@ import axios from "axios";
 import { access } from "fs";
 import { getConfig } from "../globalVariables/config";
 import { getAllGames, getSingleGame, order } from "../globalVariables/endpoints";
-import Games, { orderData } from "../models/Games";
+import Games, { CartInterface, orderData } from "../models/Games";
 
 
 
@@ -24,9 +24,9 @@ export function getGame(id: string) {
   );
 }
 
-export function makeOrder(orderData:orderData) {
+export function makeOrder(orderData:orderData, orderDetails:CartInterface[]) {
   return new Promise<{ data: any }>((resolve) =>
-    axios.post(order, orderData, getConfig()).then((res) => resolve({ data: res.data }))
+    axios.post(order, {"orderData": orderData, "orderDetails": orderDetails}, getConfig()).then((res) => resolve({ data: res.data }))
   );
 }
 

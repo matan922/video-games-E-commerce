@@ -27,3 +27,9 @@ export interface orderData {
     city: string;
     zip: string;
 }
+
+export interface CartInterface {
+    id?:number;
+    game_name:string;
+    price:string;
+}

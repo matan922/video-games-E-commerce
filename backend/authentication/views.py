@@ -20,6 +20,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         # Add custom claims
         token["username"] = user.username
+        token["is_staff"] = user.is_staff
         # ...
         return token
 
@@ -44,7 +45,7 @@ class RegisterView(APIView):
         except User.DoesNotExist:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.save()
-            return Response({"success": "User registered successfully"})
+            return Response({"success": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
 # ------------------------- REGISTER END ------------------------- #
 

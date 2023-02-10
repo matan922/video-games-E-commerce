@@ -6,6 +6,7 @@ import { BsCart } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { addToCart, orderAsync, removeAllFromCart, removeFromCart, selectCartList } from '../../Reducers/shopSlice';
+import { CartInterface } from '../../models/Games'
 
 const CartModal = () => {
     const cart = useAppSelector(selectCartList);
@@ -42,8 +43,7 @@ const CartModal = () => {
 
     const { full_name, address, city, zip } = formData;
 
-
-
+    
 
     const onChange = (e: any) => {
         setFormData((prevState) => ({
@@ -60,8 +60,12 @@ const CartModal = () => {
             city,
             zip,
         };
-        console.log(orderData);
-        dispatch(orderAsync(orderData));
+
+        let cartData = []
+        for (let i = 0; i < cart.length; i++) {
+            cartData.push(cart[i].id)
+        }
+        dispatch(orderAsync({orderData,orderDetails:cart}));
     }
 
 
@@ -70,7 +74,7 @@ const CartModal = () => {
         let total = 0
         cart.forEach(item => {
             total += +item.price
-        })
+        })  
         return Math.round((total + Number.EPSILON) * 100) / 100
     }
 

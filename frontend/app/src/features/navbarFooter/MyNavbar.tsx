@@ -23,7 +23,7 @@ function MyNavbar() {
   const username = useAppSelector(selectUserName);
 
   const cart = useAppSelector(selectCartList);
-  const [ storageGame, setStorageGame ] = useState(null)
+  const [ storageGame, setStorageGame ] = useState(0)
 
   const totalGames = () => {
     const initialValue = 0
@@ -66,6 +66,7 @@ function MyNavbar() {
           <Nav className="me-end">
             <CartModal /> {storageGame ? <Navbar.Text>{storageGame}</Navbar.Text> : null} &nbsp;&nbsp;
             {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register">Register</Nav.Link>)} &nbsp;
+            {isLogged ?  null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
             {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page">Login</Nav.Link>)}
           </Nav>
         </Container>

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-
 # Create your models here.
 
 
@@ -33,24 +32,22 @@ class Genre_Extracted(models.Model):
 
 
 class Order(models.Model):
-    order_id = models.BigAutoField(primary_key=True)
     date_of_order = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name="orders")
     address = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     full_name = models.CharField(max_length=50)
     zip = models.CharField(max_length=30)
 
     def __str__(self):
-        return str(self.order_id)
+        return str(self.user.username)
 
 
 class OrderDetail(models.Model):
-    order_detail_id = models.BigAutoField(primary_key=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="games")
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True) 
 
 
     def __str__(self):
-        return str(self.order_detail_id)
+        return str(self.game)
 

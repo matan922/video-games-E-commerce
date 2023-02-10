@@ -2,12 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
+
+from profile_user.serializers import ProfileSerializer
 from .models import Game,Genre, Genre_Extracted, OrderDetail, Order
 from .serializers import GameSerializer, GenreSerializer, GenreExtractedSerializer, OrderDetailSerializer, OrderSerializer
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
+from profile_user.models import Profile
 
 # Create your views here.
 
@@ -124,15 +127,28 @@ class OrderGames(APIView):
 
 # create a new order for the authenticated user.
     def post(self, request):
-        # print(request.auth)
-        serializer = OrderSerializer(data=request.data, context={'user': request.user})
-        print(serializer)
+        serializer = OrderSerializer(data=request.data["orderData"], context={'user': request.user})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            print(serializer.data)
+            for item in request.data["orderDetails"]:
+                # print(request.data)
+                order_dets = {}
+                order_dets["game"] = item["id"]
+                order_dets['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
+                serializer2 = OrderDetailSerializer(data=order_dets)
+                if serializer2.is_valid(raise_exception=True):
+                    serializer2.save()
+                    # print(request.user.id)
+            # for item2 in request.data["orderDetails"]:
+            #     games = {}
+            #     games["profile"] = request.user.id
+            #     games["game"] = item2["id"]
+            #     print(games)
+            #     serializer3 = ProfileSerializer(data=games)
+            #     if serializer3.is_valid(raise_exception=True):
+            #         serializer3.save()
+            #         print(serializer3.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-            # return Response({"error": "no account found"} ,status=status.HTTP_400_BAD_REQUEST)
-        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # -----------------------------------------------------

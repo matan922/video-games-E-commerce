@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { getProfileAsync, getMyProfileAsync, editMyProfileAsync } from '../../Reducers/communitySlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Spinner from '../../Spinner'
 import { Button, Container, Form } from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal'
+import { getGameInfo } from '../../Reducers/shopSlice'
+import Game from '../../models/Games'
 
 
 
@@ -17,12 +19,15 @@ const MyProfile = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const navigate = useNavigate();
 
     const [image, setImage] = useState<any>(null);
     const [displayName, setDisplayName] = useState<string>("");
     const [userBio, setUserBio] = useState<string>("");
     const [imageUrl, setImageUrl] = useState('');
 
+
+    
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -43,8 +48,6 @@ const MyProfile = () => {
         dispatch(getMyProfileAsync())
     }, [dispatch])
 
-
-
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setImage(e.target.files![0]);
     };
@@ -57,18 +60,24 @@ const MyProfile = () => {
         setUserBio(e.target.value);
     };
 
+
     return (
-        <div>
-            <Container>
+        <div >
+            <div style={{ color: "#66C0F4" }}>
+                <h1>Hello, {display_name}</h1>
+                <hr />
                 {isLoading ? <Spinner></Spinner> : null}
-                {avatar} <br />
-                Display Name: {display_name} <br></br>
+                <img src={avatar} /> <br />
+                <br></br>
                 Bio: {bio} <br></br>
-                Games: {games.map(games => <div>{games}</div>)} <br />
+
+                {/* Games: {games.map((game,i) => <Link to={"/shop/game/" + game.id}>{game.game_name}</Link>)} <br /> */}
+
+
                 <Button variant="primary" onClick={handleShow}>
                     Edit Profile
                 </Button>
-            </Container>
+            </div>
 
             <Modal show={show} onHide={handleClose}>
                 <Form onSubmit={handleSubmit}>
