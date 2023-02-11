@@ -3,21 +3,22 @@ import { access } from "fs";
 import { getConfig } from "../globalVariables/config";
 import { getAllGames, getSingleGame, order, steamGames } from "../globalVariables/endpoints";
 import Game from "../models/Games";
+import { temp } from "../models/PaginationInterfaces";
 import Games, { CartInterface, orderData } from "../models/Games";
 
 
 
-export function getGames(pageNumber: number) {
-  return new Promise<{ data: Games[] }>((resolve) =>
-    axios.get(getAllGames, { params: { page: pageNumber } }).then((res) => resolve({ data: res.data }))
+export function getGames(offset: number, searchQuery: string) {
+  return new Promise<{ data: temp }>((resolve) =>
+    axios.get(getAllGames, { params: { limit: 10 , offset: offset ,search: searchQuery} }).then((res) => resolve({ data: res.data }))
   );
 }
 
-export function searchGames(searchQuery: string) {
-  return new Promise<{ data: Games[] }>((resolve) =>
-    axios.get(getAllGames, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data }))
-  );
-}
+// export function searchGames(searchQuery: string) {
+//   return new Promise<{ data: Games[] }>((resolve) =>
+//     axios.get(getAllGames, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data }))
+//   );
+// }
 
 export function getGame(id: string) {
   return new Promise<{ data: Games }>((resolve) =>

@@ -5,43 +5,68 @@ import {
   selectGame,
   selectCartList,
   addToCart,
-  searchGamesAsync,
+  // searchGamesAsync,
   removeFromCart,
   getGameInfo,
   steamAppidGameAsync,
   selectLoading,
   // selectCurrentPage,
-  selectGamesPerPage,
+  // selectGamesPerPage,
+  selectNextPage,
+  selectPrevPage,
+  selectCount,
 } from "../../Reducers/shopSlice";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Container, Form, Navbar } from "react-bootstrap";
 import SearchComponent from "../navbarFooter/SearchComponent";
 import Game from "../../models/Games";
 import Spinner from "../../Spinner";
-import Pagination from "../../Pagination";
+import { toast } from "react-toastify";
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import MyPagination from "../../MyPagination";
+
+
 
 const Shop = () => {
-  const gamesPerPage = useAppSelector(selectGamesPerPage)
-  // const currentPage = useAppSelector(selectCurrentPage)
-
   const dispatch = useAppDispatch();
-  const games = useAppSelector(selectGameList);
-  const loading = useAppSelector(selectLoading);
-  const cart = useAppSelector(selectCartList);
   const navigate = useNavigate();
+  const loading = useAppSelector(selectLoading);
+  const games = useAppSelector(selectGameList);
+  const nextPage = useAppSelector(selectNextPage);
+  const prevPage = useAppSelector(selectPrevPage);
+  const count = useAppSelector(selectCount)
+
+  const [offsetPage, setOffsetPage] = useState(0)
+  const [searchText, setSearchText] = useState("");
+
+  // --------------
+  // console.log(count)
+  // console.log(games)
+  // --------------
+
 
   const goToGame = (selectedGame: Game) => {
     dispatch(getGameInfo(selectedGame))
     navigate("game/" + selectedGame.id + "/")
   }
 
-
-  const [currentPage, setCurrentPage] = useState<number>(1)
-
   useEffect(() => {
-    dispatch(getGamesAsync(currentPage));
-  }, [dispatch,currentPage]);
+    const searchQuery = ""
+    dispatch(getGamesAsync({ offset: offsetPage, searchQuery }))
+  }, [dispatch, offsetPage]);
+
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let offset = 0
+    let searchQuery = searchText;
+    console.log(games.length)
+
+    dispatch(getGamesAsync({ offset, searchQuery }))
+  };
+
 
   if (loading) {
     return (
@@ -49,14 +74,27 @@ const Shop = () => {
     )
   } else {
     return (
-
       <div>
         <Button onClick={() => dispatch(steamAppidGameAsync(10))}>Test</Button>
 
+        <Navbar expand="lg" bg="dark" variant="dark">
+          <Container>
+            <Form className="d-flex" onSubmit={handleSearch}>
+              <Form.Control
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                aria-label="Search"
+              />
+              <Button type="submit" variant="outline-success">Search</Button>
+            </Form>
+          </Container>
+        </Navbar>
 
         <div style={{ color: "#66C0F4" }}>
-
-          <SearchComponent asyncThunk={searchGamesAsync}></SearchComponent>
+          {/* <SearchComponent asyncThunk={searchGamesAsync}></SearchComponent> */}
           <h1>Games list!</h1>
           <hr></hr>
           {games.map((game, i) => (
@@ -66,12 +104,7 @@ const Shop = () => {
             </div>
           ))}
         </div>
-        <Button onClick={() => setCurrentPage(1)}>1</Button>
-        <Button onClick={() => setCurrentPage(2)}>2</Button>
-        <Button onClick={() => setCurrentPage(3)}>3</Button>
-        <Button onClick={() => setCurrentPage(4)}>4</Button>
-        <Button onClick={() => setCurrentPage(5)}>5</Button>
-        <Button onClick={() => setCurrentPage(6)}>6</Button>
+        <MyPagination />
       </div >
     );
   };

@@ -8,7 +8,7 @@ import { Profile } from "../models/CommunityInterfaces";
 export const getProfile = (id: string) => {
   return new Promise<{ data: Profile }>((resolve) =>
     axios.get(profileGet + id).then((res) => {
-      resolve({ data: res.data })
+      resolve({ data: res.data["profile"] })
     })
   );
 }
@@ -50,7 +50,7 @@ export const getAllProfiles = () => {
 
 export const searchProfiles = (searchQuery: string) => {
   return new Promise<{ data: Profile[] }>((resolve) =>
-    axios.get(allProfilesGet, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data }))
+    axios.get(allProfilesGet, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data["profile"] }))
   );
 }
 

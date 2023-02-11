@@ -64,6 +64,7 @@ export const communitySlice = createSlice({
                 state.games_bought = action.payload.data.games_bought;
             })
             .addCase(getAllProfilesAsync.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.profiles = action.payload.data;
             })
             .addCase(getMyProfileAsync.pending, (state, action) => {

@@ -25,6 +25,7 @@ urlpatterns = [
     path('genres_extracted/', views.ExtractedGenres.as_view(), name='genre-list'),
     path('genre_extracted/<int:pk>/', views.ExtractedGenreDetail.as_view(), name='genre-detail'),
     path('orders/', views.OrderGames.as_view(), name='genre-detail'),
+    # path('steamapi/<int:appid>/', views.SteamGames.as_view(), name='steam-games'),
     path('steamapi/<int:appid>/', views.SteamGames.as_view(), name='steam-games'),
     
     # path('purchase/<str:pk>/', views.OrderGameDetail.as_view(), name='genre-detail'),

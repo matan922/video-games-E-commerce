@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
@@ -12,6 +13,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from profile_user.models import Profile
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.pagination import LimitOffsetPagination
+
 
 # Create your views here.
 
@@ -21,24 +24,44 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # -------------------- Games Start ------------------------
 
 
-class Games(APIView):
-    def get(self, request):
-        query = request.GET.get("search", None)
-        page = request.GET.get("page", 1)
+class Games(ListAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+    pagination_class = LimitOffsetPagination
+
+    def get_queryset(self):
+        query = self.request.GET.get("search", None)
         if query:
             games = Game.objects.filter(game_name__icontains=query)
         else:
             games = Game.objects.all()
-            
-        paginator = Paginator(games, 10)
-        try:
-            games_page = paginator.page(page)
-        except PageNotAnInteger:
-            games_page = paginator.page(1)
-        except EmptyPage:
-            games_page = paginator.page(paginator.num_pages)
-        serializer = GameSerializer(games_page, many=True)
-        return Response(serializer.data)
+        return games
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = GameSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+
+    # def get(self, request):
+    #     query = request.GET.get("search", None)
+    #     page = request.GET.get("page", 1)
+    #     if query:
+    #         games = Game.objects.filter(game_name__icontains=query)
+    #     else:
+    #         games = Game.objects.all()
+
+    #     paginator = Paginator(games, 10)
+    #     try:
+    #         games_page = paginator.page(page)
+    #     except PageNotAnInteger:
+    #         games_page = paginator.page(1)
+    #     except EmptyPage:
+    #         games_page = paginator.page(paginator.num_pages)
+    #     serializer = GameSerializer(games_page, many=True)
+    #     return Response(serializer.data)
         
         # query = request.GET.get("search", None)
         # if query:

@@ -10,6 +10,7 @@ export default class Game {
     price:number = 0
 }
 
+
 export class Genre {
     id?:number
     genre_name:string = ""

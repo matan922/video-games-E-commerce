@@ -10,7 +10,10 @@ import { logoutAsync, reset, selectIsLogged, selectUserName } from "../../Reduce
 import { MyToken } from '../../models/InterfaceAuth'
 import Form from "react-bootstrap/form";
 import { Dropdown } from "react-bootstrap";
-import { searchGamesAsync, selectCartList } from "../../Reducers/shopSlice";
+import {
+  // searchGamesAsync,
+  selectCartList
+} from "../../Reducers/shopSlice";
 import { searchProfilesAsync } from "../../Reducers/communitySlice";
 import { BsCart } from 'react-icons/bs';
 import CartModal from "./CartModal";
@@ -23,12 +26,11 @@ function MyNavbar() {
   const username = useAppSelector(selectUserName);
 
   const cart = useAppSelector(selectCartList);
-  const [ storageGame, setStorageGame ] = useState(0)
+  const [storageGame, setStorageGame] = useState(0)
 
   const totalGames = () => {
     const initialValue = 0
     const total = cart.reduce((accumulator) => accumulator + 1, initialValue)
-    console.log(total)
     setStorageGame(total)
   }
 
@@ -55,19 +57,19 @@ function MyNavbar() {
             GAME STORE
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/shop">
+            <Nav.Link as={Link} to="shop/">
               Store
             </Nav.Link>
-            <Nav.Link as={Link} to="/community">
+            <Nav.Link as={Link} to="community/">
               Community
             </Nav.Link>
-            {isLogged ? (<Nav.Link as={Link} to="/myprofile">My Profile</Nav.Link>) : null}
+            {isLogged ? (<Nav.Link as={Link} to="/myprofile/">My Profile</Nav.Link>) : null}
           </Nav>
           <Nav className="me-end">
             <CartModal /> {storageGame ? <Navbar.Text>{storageGame}</Navbar.Text> : null} &nbsp;&nbsp;
-            {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register">Register</Nav.Link>)} &nbsp;
-            {isLogged ?  null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
-            {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page">Login</Nav.Link>)}
+            {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
+            {isLogged ? null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
+            {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
           </Nav>
         </Container>
       </Navbar>

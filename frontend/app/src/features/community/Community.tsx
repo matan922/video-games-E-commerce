@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import SearchComponent from '../navbarFooter/SearchComponent'
 import { getAllProfilesAsync, searchProfilesAsync, selectProfiles } from '../../Reducers/communitySlice'
 
 
@@ -17,18 +16,14 @@ const Community = () => {
 
 
     const profiles = useAppSelector(selectProfiles)
-
+    console.log(profiles)
 
 
     return (
-
-        <div>
-            <div style={{ color: "#66C0F4" }}>
-                <SearchComponent asyncThunk={searchProfilesAsync} />
-                {profiles.map((profile, i) => <div key={i}>
-                    ID: {profile.id} ,{profile.bio} user ID: {profile.user} <Button variant="info" onClick={() => navigate("profile/" + profile.id + "/")}>Profile </Button>
-                </div>)}
-            </div>
+        <div style={{ color: "#66C0F4" }}>
+            {profiles.map((profile, i) => <div key={i}>
+                ID: {profile.id} ,{profile.bio} user ID: {profile.user} <Button variant="info" onClick={() => navigate("profile/" + profile.id + "/")}>Profile </Button>
+            </div>)}
         </div>
     )
 }
