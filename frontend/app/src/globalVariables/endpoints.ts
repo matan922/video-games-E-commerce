@@ -14,4 +14,4 @@ export const authRegister = "/auth/register/"
 // community related endpoints
 export const profileGet = "/community/profile/"
 export const allProfilesGet = "/community/profiles/"
-
+export const steamGames = "/games_list/steamapi/"

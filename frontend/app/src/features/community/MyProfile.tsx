@@ -24,7 +24,6 @@ const MyProfile = () => {
     const [image, setImage] = useState<any>(null);
     const [displayName, setDisplayName] = useState<string>("");
     const [userBio, setUserBio] = useState<string>("");
-    const [imageUrl, setImageUrl] = useState('');
 
 
     
@@ -72,7 +71,7 @@ console.log(games_bought)
                 Bio: {bio} <br></br>
                 Games: {games_bought.map((game,i) => <Link to={"/shop/game/"}>{game}</Link>)} <br />
 
-
+                <br />
                 <Button variant="primary" onClick={handleShow}>
                     Edit Profile
                 </Button>

@@ -1,14 +1,15 @@
 import axios from "axios";
 import { access } from "fs";
 import { getConfig } from "../globalVariables/config";
-import { getAllGames, getSingleGame, order } from "../globalVariables/endpoints";
+import { getAllGames, getSingleGame, order, steamGames } from "../globalVariables/endpoints";
+import Game from "../models/Games";
 import Games, { CartInterface, orderData } from "../models/Games";
 
 
 
-export function getGames() {
+export function getGames(pageNumber: number) {
   return new Promise<{ data: Games[] }>((resolve) =>
-    axios.get(getAllGames).then((res) => resolve({ data: res.data }))
+    axios.get(getAllGames, { params: { page: pageNumber } }).then((res) => resolve({ data: res.data }))
   );
 }
 
@@ -24,10 +25,15 @@ export function getGame(id: string) {
   );
 }
 
-export function makeOrder(orderData:orderData, orderDetails:CartInterface[]) {
+export function makeOrder(orderData: orderData, orderDetails: CartInterface[]) {
   return new Promise<{ data: any }>((resolve) =>
-    axios.post(order, {"orderData": orderData, "orderDetails": orderDetails}, getConfig()).then((res) => resolve({ data: res.data }))
+    axios.post(order, { "orderData": orderData, "orderDetails": orderDetails }, getConfig()).then((res) => resolve({ data: res.data }))
   );
 }
 
+export const steamAppidGame = async (appid: number) => {
+  return new Promise<{ data: any }>((resolve) =>
+    axios.get(steamGames + appid +"/").then((res) => resolve({ data: res.data }))
+  )
+};
 

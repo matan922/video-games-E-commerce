@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
-
+import requests
 from profile_user.serializers import ProfileSerializer
 from .models import Game,Genre, Genre_Extracted, OrderDetail, Order
 from .serializers import GameSerializer, GenreSerializer, GenreExtractedSerializer, OrderDetailSerializer, OrderSerializer
@@ -11,6 +11,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from profile_user.models import Profile
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -23,12 +24,29 @@ from profile_user.models import Profile
 class Games(APIView):
     def get(self, request):
         query = request.GET.get("search", None)
+        page = request.GET.get("page", 1)
         if query:
             games = Game.objects.filter(game_name__icontains=query)
         else:
             games = Game.objects.all()
-        serializer = GameSerializer(games, many=True)
+            
+        paginator = Paginator(games, 10)
+        try:
+            games_page = paginator.page(page)
+        except PageNotAnInteger:
+            games_page = paginator.page(1)
+        except EmptyPage:
+            games_page = paginator.page(paginator.num_pages)
+        serializer = GameSerializer(games_page, many=True)
         return Response(serializer.data)
+        
+        # query = request.GET.get("search", None)
+        # if query:
+        #     games = Game.objects.filter(game_name__icontains=query)
+        # else:
+        #     games = Game.objects.all()
+        # serializer = GameSerializer(games, many=True)
+        # return Response(serializer.data)
 
     def post(self, request):
         serializer = GameSerializer(data=request.data)
@@ -150,6 +168,16 @@ class OrderGames(APIView):
             #         print(serializer3.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class SteamGames(APIView):
+    def get(self, request, appid):
+        steam_game = requests.get(f'https://store.steampowered.com/api/appdetails?appids={appid}')
+        return Response(steam_game.json())
+
+
+
 
 # -----------------------------------------------------
 
