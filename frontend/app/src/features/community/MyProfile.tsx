@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Spinner from '../../Spinner'
 import { Button, Container, Form } from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal'
-import { getGameInfo } from '../../Reducers/shopSlice'
 import Game from '../../models/Games'
 
 

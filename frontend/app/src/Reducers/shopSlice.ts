@@ -12,7 +12,7 @@ import {
   getGame,
   // searchGames,
   makeOrder,
-  steamAppidGame
+  steamAppidGame,
 } from "../APIs/shopAPI";
 import { CreateAxiosDefaults } from "axios";
 
@@ -27,7 +27,7 @@ export interface ShopState {
   game: Game;
   cartList: CartInterface[]
   order: any[]
-  steamAppid: {}
+  steamAppid: any
   message: string;
   loading: boolean;
 }
@@ -46,8 +46,13 @@ const initialState: ShopState = {
   loading: false,
 };
 
-export const getGamesAsync = createAsyncThunk("shop/getGames", async (data:{offset: number, searchQuery: string}) => {
-  const response = await getGames(data.offset, data.searchQuery);
+export const getGamesAsync = createAsyncThunk("shop/getGames", async (data:{page: number, searchQuery: string}) => {
+  const response = await getGames(data.page, data.searchQuery);
+  return response.data;
+});
+
+export const getSingleGameAsync = createAsyncThunk("shop/getGame", async (id: string) => {
+  const response = await getGame(id);
   return response.data;
 });
 
@@ -63,18 +68,14 @@ export const orderAsync = createAsyncThunk("shop/makeOrder", async (data: { orde
 
 export const steamAppidGameAsync = createAsyncThunk("shop/steamAppidGame", async (appid: number) => {
   const response = await steamAppidGame(appid);
-  console.log(response)
   return response;
 });
+
 
 export const shopSlice = createSlice({
   name: "shop",
   initialState,
   reducers: {
-
-    loadGame: (state) => {
-      state.game = JSON.parse(localStorage.getItem('currentGame') as string)
-    },
 
     loadCart: (state) => {
       if (localStorage.getItem('cart')) {
@@ -113,10 +114,6 @@ export const shopSlice = createSlice({
       localStorage.removeItem("cart");
     },
 
-    getGameInfo: (state, action) => {
-      state.game = action.payload;
-      localStorage.setItem('currentGame', JSON.stringify(action.payload))
-    }
   },
 
   extraReducers: (builder) => {
@@ -131,17 +128,23 @@ export const shopSlice = createSlice({
       .addCase(getGamesAsync.pending, (state, action) => {
         state.loading = true;
       })
+      .addCase(getSingleGameAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.game = action.payload
+      })
       .addCase(orderAsync.fulfilled, (state, action) => {
+        state.loading = false;
         state.order = action.payload;
-        console.log(state.order)
+
       })
       .addCase(steamAppidGameAsync.fulfilled, (state, action) => {
-        state.steamAppid = action.payload;
+        state.loading = false;
+        state.steamAppid = action.payload.data;
       })
   },
 });
 
-export const { loadCart, addToCart, removeFromCart, removeAllFromCart, getGameInfo, loadGame } = shopSlice.actions;
+export const { loadCart, addToCart, removeFromCart, removeAllFromCart } = shopSlice.actions;
 export const selectGameList = (state: RootState) => state.shop.gamesList;
 export const selectGame = (state: RootState) => state.shop.game;
 export const selectCartList = (state: RootState) => state.shop.cartList;
@@ -149,6 +152,7 @@ export const selectLoading = (state: RootState) => state.shop.loading;
 export const selectNextPage = (state: RootState) => state.shop.nextPage;
 export const selectPrevPage = (state: RootState) => state.shop.prevPage;
 export const selectCount = (state: RootState) => state.shop.countOfGames;
+export const selectSteamAppid = (state: RootState) => state.shop.steamAppid;
 
 
 export default shopSlice.reducer;

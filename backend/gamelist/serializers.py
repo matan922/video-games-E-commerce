@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from .models import Game, Genre, Genre_Extracted, Order, OrderDetail, Order
+from .models import Game, Genre, Order, OrderDetail, Order, Review # Genre_Extracted
 
  
  
 
 
 
-class GenreExtractedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genre_Extracted
-        fields = '__all__'
+# class GenreExtractedSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Genre_Extracted
+#         fields = '__all__'
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +44,12 @@ class OrderSerializer(serializers.ModelSerializer):
         return Order.objects.create(**validated_data,user=user)
 
 
+class ReviewSerializer(serializers.ModelSerializer): 
+    class Meta: 
+        model = Review
+        fields = '__all__'
 
+    def create(self, validated_data): 
+        user = self.context['user']
+        return Review.objects.create(**validated_data, user = user)
+    

@@ -1,6 +1,8 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../Reducers/authSlice';
+import categoriesReducer from '../Reducers/categoriesSlice';
 import communityReducer from '../Reducers/communitySlice';
+import ReviewReducer from '../Reducers/reviewsSlice';
 import shopReducer from '../Reducers/shopSlice';
 
 
@@ -11,6 +13,8 @@ export const store = configureStore({
     shop: shopReducer,
     auth: authReducer,
     community: communityReducer,
+    review: ReviewReducer,
+    categories: categoriesReducer,
   },
 });
 

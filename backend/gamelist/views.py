@@ -5,29 +5,53 @@ from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
 import requests
 from profile_user.serializers import ProfileSerializer
-from .models import Game,Genre, Genre_Extracted, OrderDetail, Order
-from .serializers import GameSerializer, GenreSerializer, GenreExtractedSerializer, OrderDetailSerializer, OrderSerializer
+from .models import Game,Genre, OrderDetail, Order, Review # Genre_Extracted
+from .serializers import GameSerializer, GenreSerializer, OrderDetailSerializer, OrderSerializer, ReviewSerializer # GenreExtractedSerializer
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from profile_user.models import Profile
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth.models import User
+from .pagination import CustomPageNumberPagination
 
 
 # Create your views here.
 
 
 
-# @permission_classes([IsAuthenticated])
+# ------------------------- Genres Start ------------------------
+class Genres(APIView):
+    def get(self, request):
+        genres = Genre.objects.all()
+        serializer = GenreSerializer(genres, many=True)
+        return Response(serializer.data)
+
+
+class GenreDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Genre.objects.get(pk=pk)
+        except Genre.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = GenreSerializer(genre)
+        return Response(serializer.data)
+
+# ------------------------- Genres End ------------------------
+
 # -------------------- Games Start ------------------------
 
 
 class Games(ListAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    pagination_class = LimitOffsetPagination
+    pagination_class = CustomPageNumberPagination
+
 
     def get_queryset(self):
         query = self.request.GET.get("search", None)
@@ -40,10 +64,17 @@ class Games(ListAPIView):
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
+        print(queryset)
+        current_page = self.request.query_params.get('page', 1) 
         serializer = GameSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-
+    def post(self, request):
+        serializer = GameSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def get(self, request):
     #     query = request.GET.get("search", None)
@@ -71,14 +102,6 @@ class Games(ListAPIView):
         # serializer = GameSerializer(games, many=True)
         # return Response(serializer.data)
 
-    def post(self, request):
-        serializer = GameSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class GameDetail(APIView):
@@ -91,6 +114,7 @@ class GameDetail(APIView):
 
     def get(self, request, pk):
         game = self.get_object(pk)
+        genres = Genre.objects.all()
         serializer = GameSerializer(game)
         return Response(serializer.data)
 
@@ -109,47 +133,26 @@ class GameDetail(APIView):
 
 # ------------------------- Games End ---------------------------
 
-# ------------------------- Genres Start ------------------------
-class Genres(APIView):
-    def get(self, request):
-        genres = Genre.objects.all()
-        serializer = GenreSerializer(genres, many=True)
-        return Response(serializer.data)
-
-
-class GenreDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Genre.objects.get(pk=pk)
-        except Genre.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        genre = self.get_object(pk)
-        serializer = GenreSerializer(genre)
-        return Response(serializer.data)
-
-# ------------------------- Genres End ------------------------
 
 # ------------------------- Genre_Extracted Start -------------------
 
-class ExtractedGenres(APIView):
-    def get(self, request):
-        genres = Genre_Extracted.objects.all()
-        serializer = GenreExtractedSerializer(genres, many=True)
-        return Response(serializer.data)
+# class ExtractedGenres(APIView):
+#     def get(self, request):
+#         genres = Genre_Extracted.objects.all()
+#         serializer = GenreExtractedSerializer(genres, many=True)
+#         return Response(serializer.data)
 
-class ExtractedGenreDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Genre_Extracted.objects.get(pk=pk)
-        except Genre_Extracted.DoesNotExist:
-            raise Http404
+# class ExtractedGenreDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Genre_Extracted.objects.get(pk=pk)
+#         except Genre_Extracted.DoesNotExist:
+#             raise Http404
 
-    def get(self, request, pk):
-        genre = self.get_object(pk)
-        serializer = GenreExtractedSerializer(genre)
-        return Response(serializer.data)
+#     def get(self, request, pk):
+#         genre = self.get_object(pk)
+#         serializer = GenreExtractedSerializer(genre)
+#         return Response(serializer.data)
 
 
 # ------------------------- Genre_Extracted End -------------------
@@ -179,18 +182,46 @@ class OrderGames(APIView):
                 serializer2 = OrderDetailSerializer(data=order_dets)
                 if serializer2.is_valid(raise_exception=True):
                     serializer2.save()
-                    # print(request.user.id)
-            # for item2 in request.data["orderDetails"]:
-            #     games = {}
-            #     games["profile"] = request.user.id
-            #     games["game"] = item2["id"]
-            #     print(games)
-            #     serializer3 = ProfileSerializer(data=games)
-            #     if serializer3.is_valid(raise_exception=True):
-            #         serializer3.save()
-            #         print(serializer3.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+class ReviewView(APIView):
+
+    def get(self, request, pk):
+        reviews = Review.objects.filter(game=Game.objects.get(id=pk))
+        serializer = ReviewSerializer(reviews, many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        user = request.user
+        print(data)
+        print(user)
+        if request.user.is_authenticated:
+            game = Game.objects.get(id = data['id'])
+            print("in if")
+            reviewing_user = User.objects.get(username = user.username)
+            Review.objects.create(
+                game = game, 
+                user = reviewing_user, 
+                customer_name = user.username,
+                rating = data['rating'], 
+                description = data['description'])
+            return Response({"succecss": "Added."}, status = status.HTTP_200_OK)
+        return Response({"error": "Please log in to leave a review."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+
+
+
+
 
 
 

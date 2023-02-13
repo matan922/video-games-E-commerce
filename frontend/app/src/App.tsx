@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import MyNavbar from "./features/navbarFooter/MyNavbar";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { isLoggedOn, isLoggedOff } from "./Reducers/authSlice";
-import Spinner from "./Spinner";
-import { loadCart, selectCartList, selectGameList } from "./Reducers/shopSlice";
+import { loadCart } from "./Reducers/shopSlice";
 import Footer from "./features/navbarFooter/Footer";
 import { Container } from "react-bootstrap";
 import Profile from "./features/community/Profile";
@@ -20,12 +19,10 @@ import Register from "./features/authentication/Register";
 import ErrorFallback from "./ErrorBoundary";
 import { ErrorBoundary } from "react-error-boundary"
 const Shop = React.lazy(() => import('./features/shop/Shop'));
-// selectCurrentPage
+
+
 function App() {
   const dispatch = useAppDispatch()
-  // const gamesPerPage = useAppSelector(selectGamesPerPage)
-  // const currentPage = useAppSelector(selectCurrentPage)
-  const games = useAppSelector(selectGameList)
 
   const myToken = JSON.parse(localStorage.getItem('token') as string)
   const accessToken = myToken?.access
@@ -68,12 +65,12 @@ function App() {
               <Route index element={<SingleGameShop />} />
               <Route path=":number" element={<SingleGameShop />} />
             </Route>
-          
+
             <Route path="community/profile/">
               <Route index element={<Profile />} />
               <Route path=":number" element={<Profile />} />
             </Route>
-          
+
           </Routes>
         </Container>
       </div>

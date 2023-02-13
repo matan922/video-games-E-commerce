@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'authentication',
     'profile_user',
     'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'import_export',
 ]
 
 REST_FRAMEWORK = {
@@ -52,6 +54,7 @@ REST_FRAMEWORK = {
 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+    
 }
 
 

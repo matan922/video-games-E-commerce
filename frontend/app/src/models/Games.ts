@@ -34,3 +34,7 @@ export interface CartInterface {
     game_name:string;
     price:string;
 }
+
+export interface SteamGame {
+    
+}
