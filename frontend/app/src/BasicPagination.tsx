@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { getGamesAsync, selectCount, selectCurrentPage, selectGenreSort, selectSearchGame, updateCurrentPage } from './Reducers/shopSlice';
-import  "./General.css";
+import  "./css/Shop.css";
 
 
 export default function BasicPagination() {

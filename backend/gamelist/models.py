@@ -40,6 +40,7 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     full_name = models.CharField(max_length=50)
     zip = models.CharField(max_length=30)
+    total = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 
     def __str__(self):
         return str(self.user.username)

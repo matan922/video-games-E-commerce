@@ -3,7 +3,6 @@ import {
   getGamesAsync,
   selectGameList,
   addToCart,
-  selectLoading,
   selectCurrentPage,
   selectSearchGame,
   updateSearchGame,
@@ -72,7 +71,7 @@ const Shop = () => {
               {games.map((game, i) =>
                 <div key={game.id}>
                   <Col>
-                    <Card className="rounded-0" style={{ backgroundColor: "#1B2838" }}>
+                    <Card className="rounded-0 card-shop  " style={{ backgroundColor: "#1B2838" }}>
                       <Card.Img className="rounded-0" src={game.steam_image_api} />
                       <Card.Body>
                         <Card.Text>{game.game_name}</Card.Text>

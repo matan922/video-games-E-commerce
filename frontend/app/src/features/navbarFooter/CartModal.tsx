@@ -17,6 +17,7 @@ const CartModal = () => {
         address: "",
         city: "",
         zip: "",
+        // total: 0,
     });
 
 

@@ -3,7 +3,7 @@ import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row } from 'rea
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getCategoriesAsync, selectCategories } from '../../Reducers/categoriesSlice'
 import { selectCurrentPage, selectGenreSort, selectSearchGame, updateGenreSort } from '../../Reducers/shopSlice'
-import "../../General.css"
+import "../../css/Shop.css"
 
 const Categories = () => {
     const dispatch = useAppDispatch()
