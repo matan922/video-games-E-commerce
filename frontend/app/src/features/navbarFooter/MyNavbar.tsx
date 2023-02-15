@@ -50,31 +50,33 @@ function MyNavbar() {
 
 
   return (
-    <>
-      <Navbar sticky="top" bg="dark" variant="dark">
+    <div>
+      <Navbar sticky="top" bg="dark" variant="dark" expand="md">
         <Container>
           <Navbar.Brand as={Link} to="/">
             GAME STORE
           </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="shop/">
-              Store
-            </Nav.Link>
-            <Nav.Link as={Link} to="community/">
-              Community
-            </Nav.Link>
-            {isLogged ? (<Nav.Link as={Link} to="/myprofile/">My Profile</Nav.Link>) : null}
-          </Nav>
-          <Nav className="me-end">
-            <CartModal /> {storageGame ? <Navbar.Text>{storageGame}</Navbar.Text> : null} &nbsp;&nbsp;
-            {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
-            {isLogged ? null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
-            {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
-          </Nav>
+          <Navbar.Toggle aria-controls="navbar-nav" />
+          <Navbar.Collapse id="navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="shop/">
+                Store
+              </Nav.Link>
+              <Nav.Link as={Link} to="community/">
+                Community
+              </Nav.Link>
+              {isLogged ? (<Nav.Link as={Link} to="/myprofile/">My Profile</Nav.Link>) : null}
+            </Nav>
+            <Nav className="me-end">
+              <CartModal /> {storageGame ? <Navbar.Text>{storageGame}</Navbar.Text> : null} &nbsp;&nbsp;
+              {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
+              {isLogged ? null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
+              {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
-
-    </>
+    </div>
   );
 }
 

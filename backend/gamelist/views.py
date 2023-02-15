@@ -55,17 +55,18 @@ class Games(ListAPIView):
 
     def get_queryset(self):
         query = self.request.GET.get("search", None)
+        sort = self.request.GET.get("sort", None)
+        games = Game.objects.all()
         if query:
-            games = Game.objects.filter(game_name__icontains=query)
-        else:
-            games = Game.objects.all()
+            games = games.filter(game_name__icontains=query)
+        if sort:
+            games = games.filter(genres__genre_name__iexact=sort)
+            print(games)
         return games
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
-        print(queryset)
-        current_page = self.request.query_params.get('page', 1) 
         serializer = GameSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -75,6 +76,7 @@ class Games(ListAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
     # def get(self, request):
     #     query = request.GET.get("search", None)
@@ -116,7 +118,11 @@ class GameDetail(APIView):
         game = self.get_object(pk)
         genres = Genre.objects.all()
         serializer = GameSerializer(game)
-        return Response(serializer.data)
+        steam_game = requests.get(f'https://store.steampowered.com/api/appdetails?appids={game.appid}')
+        full_game_info = {}
+        full_game_info["my_app"] = serializer.data
+        full_game_info["steam_game"] = steam_game.json()[str(game.appid)]
+        return Response(full_game_info)
 
     def put(self, request, pk):
         game = self.get_object(pk)
@@ -160,7 +166,6 @@ class GameDetail(APIView):
 
 
 
-# @permission_classes([IsAuthenticated])
 class OrderGames(APIView):
 # see user's orders.
     def get(self, request):
@@ -216,38 +221,34 @@ class ReviewView(APIView):
         return Response({"error": "Please log in to leave a review."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
-
-
-
-
-
-
-
-
+# Used to populate the db with images from steam api. (only main game images) 
 class SteamGames(APIView):
-    def get(self, request, appid):
-        steam_game = requests.get(f'https://store.steampowered.com/api/appdetails?appids={appid}')
-        return Response(steam_game.json())
+    def get(self, request):
+        games = Game.objects.all().filter(game_image = "")
+        for game in games:
+            print(game)
+            steam_game = requests.get(f'https://store.steampowered.com/api/appdetails?appids={game.appid}').json()
+            try:
+                steam_appid = steam_game[str(game.appid)]['data']['steam_appid']
+                game_details = steam_game[str(game.appid)]['data']['header_image']
+                if game.appid == steam_appid:
+                    game.game_image = game_details
+                    game.save()
+            except:
+                # an except because some of steam game's appids don't work so I found a different link I can get all main images from.
+                game.game_image = f'https://cdn.cloudflare.steamstatic.com/steam/apps/{game.appid}/header.jpg?'
+                game.save()
+                
+        return Response("all done")
 
 
+        # for game in games:
+        #     # print(game.appid)
+        # print(images_to_upload)
+        # print(test.appid)
+        # for img in images_to_upload:
 
-
-# -----------------------------------------------------
-
-# class OrderGameDetail(APIView):
-
-#     def get(self, request, pk):
-#         orders = Order.objects.get(id=pk)
-#         print(orders)
-#         serializer = OrderSerializer(orders)
-#         return Response(serializer.data)
-
-# --------------------------------------------------------
-
-# class OrderGamesDetails(APIView):
-
-#     def get(self, request):
-#         order_detail = OrderDetail.objects.all()
-#         serializer = OrderDetailSerializer(order_detail, many=True)
-#         return Response(serializer.data)
+        # print(game_details)
+        # steam_game["header_image"]
+        # test.game_image = "nice"
+        # test.save()

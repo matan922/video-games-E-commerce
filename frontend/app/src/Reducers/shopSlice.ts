@@ -5,26 +5,26 @@ import {
   current,
 } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../app/store";
-import Game, { Genre, AddToCartAction, orderData, CartInterface } from "../models/Games";
-import { NextPage, PrevPage, temp } from "../models/PaginationInterfaces"
+import Game, { Genre, AddToCartAction, orderData, CartInterface, GameAndSteamData } from "../models/Games";
+import { NextPage, PrevPage, Temp } from "../models/PaginationInterfaces"
 import {
   getGames,
   getGame,
-  // searchGames,
   makeOrder,
-  steamAppidGame,
 } from "../APIs/shopAPI";
 import { CreateAxiosDefaults } from "axios";
 
 
-
 export interface ShopState {
   gamesList: Game[];
+  currentPage: number;
+  searchGame: string;
+  genreSort: string;
   nextPage: string;
   prevPage: string;
   countOfGames: number;
   genre: Genre[]
-  game: Game;
+  game: GameAndSteamData;
   cartList: CartInterface[]
   order: any[]
   steamAppid: any
@@ -34,6 +34,9 @@ export interface ShopState {
 
 const initialState: ShopState = {
   gamesList: [],
+  currentPage: 1,
+  searchGame: "",
+  genreSort: "",
   nextPage: "",
   prevPage: "",
   countOfGames: 0,
@@ -46,8 +49,8 @@ const initialState: ShopState = {
   loading: false,
 };
 
-export const getGamesAsync = createAsyncThunk("shop/getGames", async (data:{page: number, searchQuery: string}) => {
-  const response = await getGames(data.page, data.searchQuery);
+export const getGamesAsync = createAsyncThunk("shop/getGames", async (data: { page: number, searchQuery: string, sortQuery: string }) => {
+  const response = await getGames(data.page, data.searchQuery, data.sortQuery);
   return response.data;
 });
 
@@ -56,20 +59,11 @@ export const getSingleGameAsync = createAsyncThunk("shop/getGame", async (id: st
   return response.data;
 });
 
-// export const searchGamesAsync = createAsyncThunk("shop/searchGames", async (searchQuery: string) => {
-//   const response = await searchGames(searchQuery);
-//   return response.data;
-// });
-
 export const orderAsync = createAsyncThunk("shop/makeOrder", async (data: { orderData: orderData, orderDetails: CartInterface[] }) => {
   const response = await makeOrder(data.orderData, data.orderDetails);
   return response.data;
 });
 
-export const steamAppidGameAsync = createAsyncThunk("shop/steamAppidGame", async (appid: number) => {
-  const response = await steamAppidGame(appid);
-  return response;
-});
 
 
 export const shopSlice = createSlice({
@@ -114,6 +108,21 @@ export const shopSlice = createSlice({
       localStorage.removeItem("cart");
     },
 
+    updateCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
+    },
+
+    updateSearchGame: (state, action: PayloadAction<string>) => {
+      state.searchGame = action.payload;
+    },
+
+    updateGenreSort: (state, action: PayloadAction<string>) => {
+      state.genreSort = action.payload;
+    },
+    resetGame: (state) => {
+      state.game = {}
+      // state.game = {steam_game: {}, my_app: JSON.parse(JSON.stringify(new Game()))}
+    }
   },
 
   extraReducers: (builder) => {
@@ -137,14 +146,10 @@ export const shopSlice = createSlice({
         state.order = action.payload;
 
       })
-      .addCase(steamAppidGameAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        state.steamAppid = action.payload.data;
-      })
   },
 });
 
-export const { loadCart, addToCart, removeFromCart, removeAllFromCart } = shopSlice.actions;
+export const { resetGame, loadCart, addToCart, removeFromCart, removeAllFromCart, updateCurrentPage, updateSearchGame, updateGenreSort } = shopSlice.actions;
 export const selectGameList = (state: RootState) => state.shop.gamesList;
 export const selectGame = (state: RootState) => state.shop.game;
 export const selectCartList = (state: RootState) => state.shop.cartList;
@@ -153,6 +158,9 @@ export const selectNextPage = (state: RootState) => state.shop.nextPage;
 export const selectPrevPage = (state: RootState) => state.shop.prevPage;
 export const selectCount = (state: RootState) => state.shop.countOfGames;
 export const selectSteamAppid = (state: RootState) => state.shop.steamAppid;
+export const selectCurrentPage = (state: RootState) => state.shop.currentPage;
+export const selectSearchGame = (state: RootState) => state.shop.searchGame;
+export const selectGenreSort = (state: RootState) => state.shop.genreSort;
 
 
 export default shopSlice.reducer;

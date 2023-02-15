@@ -42,9 +42,11 @@ function App() {
 
   return (
     <div >
+
       <MyNavbar></MyNavbar>
       <div style={{ backgroundColor: "#1B2838" }}>
         <Container style={{ backgroundColor: "#2A475E", paddingBottom: "3rem" }}>
+
           <Routes>
 
             <Route path="shop/" element={
@@ -73,10 +75,11 @@ function App() {
 
           </Routes>
         </Container>
+
       </div>
       <Footer></Footer>
       <ToastContainer />
-    </div>
+    </div >
   );
 }
 

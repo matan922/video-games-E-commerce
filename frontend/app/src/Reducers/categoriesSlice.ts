@@ -6,11 +6,14 @@ import {
   } from "@reduxjs/toolkit";
 import { getCategories } from "../APIs/categoriesAPI";
 import { RootState } from "../app/store";
-import { Cats } from "../models/CategoriesInterface";
+import { CatsState } from "../models/CategoriesInterface";
 
 
-const initialState: Cats = {
-  categories: []
+
+const initialState: CatsState = {
+  categories: [],
+  games: [],
+  filtered: false
 };
   
 
@@ -18,12 +21,16 @@ export const getCategoriesAsync = createAsyncThunk("categories/getCategories", a
     const response = await getCategories();
     return response.data;
   });
-  
 
   export const categoriesSlice = createSlice({
     name: "categories",
     initialState,
-    reducers: {},
+    reducers: {
+      resetFilter: (state) => {
+        state.filtered = false
+      },
+  
+    },
     extraReducers: (builder) => {
         builder
         .addCase(getCategoriesAsync.fulfilled, (state,action) => {
@@ -34,6 +41,7 @@ export const getCategoriesAsync = createAsyncThunk("categories/getCategories", a
   
 
   export const selectCategories = (state: RootState) => state.categories.categories;
-
+  export const selectFilteredGames = (state: RootState) => state.categories.games;
+  export const selectIsFiltered = (state: RootState) => state.categories.filtered;
 
 export default categoriesSlice.reducer;

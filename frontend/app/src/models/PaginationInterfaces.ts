@@ -1,11 +1,12 @@
 import Game from "./Games";
 
-export interface temp {
+export interface Temp {
     count:number;
     next:string;
     previous:string;
     results: Game[];
 }
+
 
 export interface NextPage {
     next: string

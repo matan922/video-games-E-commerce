@@ -12,7 +12,9 @@ class Genre(models.Model):
 
 
 class Game(models.Model):
-    game_image = models.ImageField(null=True,blank=True,default='/placeholder.png')
+    # game_image is CharField because all the images I saved from steam's api are just URLs.
+    steam_image_api = models.CharField(null=True,blank=True, max_length=255)
+    uploaded_game_image = models.ImageField(null=True,blank=True, default='/placeholder.png')
     appid = models.IntegerField(null=True)
     game_name = models.CharField(max_length=255)
     release_date = models.DateField()

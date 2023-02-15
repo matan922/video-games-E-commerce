@@ -4,57 +4,40 @@ import {
   selectGameList,
   addToCart,
   selectLoading,
-  selectNextPage,
-  selectPrevPage,
-  selectCount,
+  selectCurrentPage,
+  selectSearchGame,
+  updateSearchGame,
+  selectGenreSort,
 } from "../../Reducers/shopSlice";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Container, Form, Navbar, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Navbar, Row } from "react-bootstrap";
 import Categories from "./Categories";
 import BasicPagination from "../../BasicPagination";
-import { selectCategories } from "../../Reducers/categoriesSlice";
-
-
 
 
 const Shop = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const loading = useAppSelector(selectLoading);
   const games = useAppSelector(selectGameList);
-  const nextPage = useAppSelector(selectNextPage);
-  const prevPage = useAppSelector(selectPrevPage);
-  const count = useAppSelector(selectCount)
-  const [searchText, setSearchText] = useState("");
-  const categories = useAppSelector(selectCategories)
+  const currentPage = useAppSelector(selectCurrentPage)
+  const searchGame = useAppSelector(selectSearchGame)
+  const genreSort = useAppSelector(selectGenreSort)
 
-  // --------------
-  // console.log(count)
-  // console.table(games.map(games => games.genres))
-  // --------------
 
 
 
   useEffect(() => {
     const searchQuery = ""
-    dispatch(getGamesAsync({ page: 1, searchQuery: searchQuery }))
-  }, [dispatch]);
+    dispatch(getGamesAsync({ page: currentPage, searchQuery: searchQuery, sortQuery: genreSort }))
+  }, [dispatch, genreSort]);
 
+  // console.log(games.map(game => game.appid))
 
-  // const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   let searchQuery = searchText;
-
-  //   dispatch(getGamesAsync({ page: 1 }))
-  // };
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let searchQuery = searchText;
-
-    dispatch(getGamesAsync({ page: 1, searchQuery }))
+    dispatch(getGamesAsync({ page: currentPage, searchQuery: searchGame, sortQuery: genreSort }))
   };
-
 
   return (
     <div>
@@ -65,8 +48,8 @@ const Shop = () => {
               type="search"
               placeholder="Search"
               className="me-2"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              value={searchGame}
+              onChange={(e) => dispatch(updateSearchGame(e.target.value))}
               aria-label="Search"
             />
             <Button type="submit" variant="outline-success">Search</Button>
@@ -74,28 +57,37 @@ const Shop = () => {
         </Container>
       </Navbar>
       <Row>
-        <Col sm={4}>
+        <Col sm={3} style={{ color: "#66C0F4" }}>
+          <h1>Categories</h1>
+          <hr></hr>
+
           <Categories />
         </Col>
-        <Col sm={8}>
+        <Col sm={9}>
 
           <div style={{ color: "#66C0F4" }}>
-            {/* <SearchComponent asyncThunk={searchGamesAsync}></SearchComponent> */}
             <h1>Games list!</h1>
             <hr></hr>
-            {games.map((game, i) => (
-              <div key={i}>{game.game_name}
-                <Button variant="info" onClick={() => navigate("/shop/game/" + game.id)}>Game Details</Button>
-                <Button variant="success" onClick={() => dispatch(addToCart({ id: game.id, game_name: game.game_name, price: game.price }))}>Add to cart</Button>
-              </div>
-            ))}
+            <Row xs={1} md={3} className="g-4">
+              {games.map((game, i) =>
+                <div key={game.id}>
+                  <Col>
+                    <Card className="rounded-0" style={{ backgroundColor: "#1B2838" }}>
+                      <Card.Img className="rounded-0" src={game.steam_image_api} />
+                      <Card.Body>
+                        <Card.Text>{game.game_name}</Card.Text>
+                        <Button className="center" variant="outline-info" onClick={() => navigate("/shop/game/" + game.id)}>Game Details</Button>
+                        <Button className="center mt-3" variant="outline-success" onClick={() => dispatch(addToCart({ id: game.id, game_name: game.game_name, price: game.price }))}>Add to cart</Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </div>)}
+            </Row>
+            <BasicPagination />
           </div>
         </Col>
+
       </Row>
-      <BasicPagination />
-
-
-
     </div >
   );
 };
@@ -103,3 +95,5 @@ const Shop = () => {
 
 
 export default Shop;
+
+

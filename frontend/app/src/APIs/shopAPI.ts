@@ -2,28 +2,20 @@ import axios from "axios";
 import { access } from "fs";
 import { getConfig } from "../globalVariables/config";
 import { getAllGames, getGenres, getSingleGame, order, steamGames } from "../globalVariables/endpoints";
-import Game from "../models/Games";
-import { temp } from "../models/PaginationInterfaces";
+import Game, { GameAndSteamData } from "../models/Games";
+import { Temp } from "../models/PaginationInterfaces";
 import Games, { CartInterface, orderData } from "../models/Games";
 
 
 
-export function getGames(page: number, searchQuery: string) {
-  return new Promise<{ data: temp }>((resolve) =>
-    axios.get(getAllGames, { params: { limit: 10 , page: page ,search: searchQuery} }).then((res) => resolve({ data: res.data }))
+export function getGames(page: number, searchQuery: string, sortQuery: string) {
+  return new Promise<{ data: Temp }>((resolve) =>
+    axios.get(getAllGames, { params: { page: page ,search: searchQuery, sort: sortQuery } }).then((res) => resolve({ data: res.data }))
   );
 }
 
-
-
-// export function searchGames(searchQuery: string) {
-//   return new Promise<{ data: Games[] }>((resolve) =>
-//     axios.get(getAllGames, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data }))
-//   );
-// }
-
 export function getGame(id: string) {
-  return new Promise<{ data: Games }>((resolve) =>
+  return new Promise<{ data: GameAndSteamData }>((resolve) =>
     axios.get(getSingleGame + id + "/").then((res) => resolve({ data: res.data }))
   );
 }
@@ -34,12 +26,6 @@ export function makeOrder(orderData: orderData, orderDetails: CartInterface[]) {
   );
 }
 
-
-export const steamAppidGame = async (appid: number) => {
-  return new Promise<{ data: any }>((resolve) =>
-    axios.get(steamGames + appid +"/").then((res) => resolve({ data: res.data[appid].data }))
-  )
-};
 
 
 

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getGenres } from "../globalVariables/endpoints";
+import { getGenres, getAllGames } from "../globalVariables/endpoints";
+import { selectCategories } from "../Reducers/categoriesSlice";
 
 
 

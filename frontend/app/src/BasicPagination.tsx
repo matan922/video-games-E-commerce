@@ -1,23 +1,29 @@
-import react, { useState } from 'react';
+import react, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { getGamesAsync, selectCount } from './Reducers/shopSlice';
+import { getGamesAsync, selectCount, selectCurrentPage, selectGenreSort, selectSearchGame, updateCurrentPage } from './Reducers/shopSlice';
+import  "./General.css";
 
 
 export default function BasicPagination() {
     const dispatch = useAppDispatch()
     const count = useAppSelector(selectCount)
-    const [page, setPage] = useState(1)
+    const currentPage = useAppSelector(selectCurrentPage)
+    const searchGame = useAppSelector(selectSearchGame)
+    const genreSort = useAppSelector(selectGenreSort)
+
+
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value)
-        dispatch(getGamesAsync({ page: value, searchQuery: "" }))
+        dispatch(updateCurrentPage(value))
+        dispatch(getGamesAsync({ page: value, searchQuery: searchGame, sortQuery: genreSort }))
       }
-    
+
+
     return (
     <Stack spacing={2}>
-      <Pagination  count={Math.ceil(count/5)} color="primary" style={{color: "#66C0F4"}} onChange={handleChange} />
+      <Pagination className='center' count={Math.ceil(count/12)} page={currentPage} color="primary" style={{color: "#66C0F4", paddingTop: "3rem"}} onChange={handleChange} />
     </Stack>
   );
 }
