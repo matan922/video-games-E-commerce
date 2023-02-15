@@ -17,7 +17,6 @@ const CartModal = () => {
         address: "",
         city: "",
         zip: "",
-        // total: 0,
     });
 
 
@@ -60,6 +59,7 @@ const CartModal = () => {
             address,
             city,
             zip,
+            total: getTotalQuantity(),
         };
 
         let cartData = []
@@ -75,7 +75,7 @@ const CartModal = () => {
         let total = 0
         cart.forEach(item => {
             total += +item.price
-        })  
+        })
         return Math.round((total + Number.EPSILON) * 100) / 100
     }
 

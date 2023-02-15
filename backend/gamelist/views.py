@@ -179,6 +179,7 @@ class OrderGames(APIView):
         serializer = OrderSerializer(data=request.data["orderData"], context={'user': request.user})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            print(serializer.data)
             for item in request.data["orderDetails"]:
                 # print(request.data)
                 order_dets = {}
