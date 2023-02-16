@@ -76,7 +76,6 @@ export const communitySlice = createSlice({
                 state.display_name = action.payload.data.display_name;
                 state.games_bought = action.payload.data.games_bought;
                 state.id = action.payload.data.id;
-                console.log(action.payload)
                 state.isLoading = false
             })
             .addCase(editMyProfileAsync.fulfilled, (state, action) => {

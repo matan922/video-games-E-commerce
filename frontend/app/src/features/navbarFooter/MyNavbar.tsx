@@ -11,7 +11,6 @@ import { MyToken } from '../../models/InterfaceAuth'
 import Form from "react-bootstrap/form";
 import { Dropdown } from "react-bootstrap";
 import {
-  // searchGamesAsync,
   selectCartList
 } from "../../Reducers/shopSlice";
 import { searchProfilesAsync } from "../../Reducers/communitySlice";
@@ -68,7 +67,7 @@ function MyNavbar() {
               {isLogged ? (<Nav.Link as={Link} to="/myprofile/">My Profile</Nav.Link>) : null}
             </Nav>
             <Nav className="me-end">
-              <CartModal /> {storageGame ? <Navbar.Text>{storageGame}</Navbar.Text> : null} &nbsp;&nbsp;
+              <CartModal onTotalGamesChange={storageGame} /> &nbsp;&nbsp;
               {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
               {isLogged ? null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
               {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}

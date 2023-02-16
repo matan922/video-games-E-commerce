@@ -4,9 +4,10 @@ import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { getProfileAsync, getMyProfileAsync, editMyProfileAsync } from '../../Reducers/communitySlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Spinner from '../../Spinner'
-import { Button, Container, Form } from 'react-bootstrap'
+import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal'
 import Game from '../../models/Games'
+import { display } from '@mui/system'
 
 
 
@@ -25,18 +26,19 @@ const MyProfile = () => {
     const [userBio, setUserBio] = useState<string>("");
 
 
-    
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
 
         const formData = new FormData();
         if (image) {
             formData.append('avatar', image)
         }
-        formData.append('display_name', displayName);
-        formData.append('bio', userBio);
+        if (displayName) {
+            formData.append('display_name', displayName)
+        };
+        if (userBio) {
+            formData.append('bio', userBio)
+        };
 
         dispatch(editMyProfileAsync(formData))
     };
@@ -58,23 +60,32 @@ const MyProfile = () => {
         setUserBio(e.target.value);
     };
 
-console.log(games_bought)
     return (
         <div >
-            <div style={{ color: "#66C0F4" }}>
-                <h1>Hello, {display_name}</h1>
-                <hr />
-                {isLoading ? <Spinner></Spinner> : null}
-                <img src={avatar} /> <br />
-                <br></br>
-                Bio: {bio} <br></br>
-                Games: {games_bought.map((game,i) => <Link to={"/shop/game/"}>{game}</Link>)} <br />
+            {
+                isLoading ? <Spinner></Spinner> :
+                    <div style={{ color: "#66C0F4" }}>
+                        <Row>
+                            
+                            <Col sm={3}>
+                            <p className="fs-1">{displayName}</p>
+                                <img style={{ height: "184px", width: "184px" }} src={avatar} />
+                            </Col>
+                            <Col sm={7}>
+                                <div   style={{ wordWrap: "break-word", color: "#C7D5E0" }}> <p className='fs-4' >Bio:</p> {bio}</div>
+                                <br />
+                                <div>Games: {games_bought.map((game, i) => <Link to={"/shop/game/"}><br />{game}</Link>)}</div> <br />
+                            </Col>
+                            <Col sm={2}>
+                                <Button variant="primary" onClick={handleShow}>
+                                    Edit Profile
+                                </Button>
 
-                <br />
-                <Button variant="primary" onClick={handleShow}>
-                    Edit Profile
-                </Button>
-            </div>
+                            </Col>
+                        </Row>
+                        <br />
+                    </div>
+            }
 
             <Modal show={show} onHide={handleClose}>
                 <Form onSubmit={handleSubmit}>
@@ -105,12 +116,11 @@ console.log(games_bought)
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button type='submit' variant="primary">Save Changes</Button>
+                        <Button type='submit' variant="primary" onClick={handleClose}>Save Changes</Button>
 
                     </Modal.Footer>
                 </Form>
             </Modal>
-
         </div>
     )
 }

@@ -45,7 +45,7 @@ function App() {
 
       <MyNavbar></MyNavbar>
       <div style={{ backgroundColor: "#1B2838" }}>
-        <Container style={{ backgroundColor: "#2A475E", paddingBottom: "3rem" }}>
+        <Container className="py-5" style={{ backgroundColor: "#2A475E" }}>
 
           <Routes>
 

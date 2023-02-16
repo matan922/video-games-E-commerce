@@ -7,8 +7,11 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { addToCart, orderAsync, removeAllFromCart, removeFromCart, selectCartList } from '../../Reducers/shopSlice';
 import { CartInterface } from '../../models/Games'
+import IconButton from '@mui/material/IconButton/IconButton';
+import StyledBadge from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const CartModal = () => {
+const CartModal = ({onTotalGamesChange}: any) => {
     const cart = useAppSelector(selectCartList);
     const dispatch = useAppDispatch()
 
@@ -43,7 +46,7 @@ const CartModal = () => {
 
     const { full_name, address, city, zip } = formData;
 
-    
+
 
     const onChange = (e: any) => {
         setFormData((prevState) => ({
@@ -66,7 +69,7 @@ const CartModal = () => {
         for (let i = 0; i < cart.length; i++) {
             cartData.push(cart[i].id)
         }
-        dispatch(orderAsync({orderData,orderDetails:cart}));
+        dispatch(orderAsync({ orderData, orderDetails: cart }));
     }
 
 
@@ -82,7 +85,11 @@ const CartModal = () => {
     return (
         <div>
             <Nav.Link>
-                <BsCart onClick={handleShowCart} />
+                <IconButton aria-label="cart">
+                    <StyledBadge badgeContent={onTotalGamesChange} color="secondary">
+                        <ShoppingCartIcon style={{color: "rgba(255, 255, 255, 0.55)"}} onClick={handleShowCart} />
+                    </StyledBadge>
+                </IconButton>
             </Nav.Link>
 
             <Modal show={showCart} onHide={handleCloseCart}>

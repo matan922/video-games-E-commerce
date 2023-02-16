@@ -32,7 +32,6 @@ export const editMyProfile = (updateData: any) => {
 
   return new Promise<{ data: Profile }>((resolve) =>
     axios.put(profileGet, updateData, config).then((res) => {
-      console.log({ data: res.data["profile"] })
       resolve({ data: res.data["profile"] })
     })
   );
