@@ -127,16 +127,28 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'video_game_store',
-        'USER': 'root',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'video_game_store', 
+        'USER': 'postgres',
         'PASSWORD': 'Ma8768769',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': '127.0.0.1', 
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'video_game_store',
+#         'USER': 'root',
+#         'PASSWORD': 'Ma8768769',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
@@ -200,4 +212,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# DJANGO_SETTINGS_MODULE="myproj.settings.dev"
