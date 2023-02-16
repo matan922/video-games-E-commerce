@@ -7,14 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useEffect, useState } from "react";
 import { logoutAsync, reset, selectIsLogged, selectUserName } from "../../Reducers/authSlice";
-import { MyToken } from '../../models/InterfaceAuth'
-import Form from "react-bootstrap/form";
-import { Dropdown } from "react-bootstrap";
 import {
   selectCartList
 } from "../../Reducers/shopSlice";
-import { searchProfilesAsync } from "../../Reducers/communitySlice";
-import { BsCart } from 'react-icons/bs';
 import CartModal from "./CartModal";
 
 
@@ -69,7 +64,6 @@ function MyNavbar() {
             <Nav className="me-end">
               <CartModal onTotalGamesChange={storageGame} /> &nbsp;&nbsp;
               {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
-              {isLogged ? null : <Nav.Link as={Link} to="/register_staff">Staff Registration</Nav.Link>}
               {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
             </Nav>
           </Navbar.Collapse>

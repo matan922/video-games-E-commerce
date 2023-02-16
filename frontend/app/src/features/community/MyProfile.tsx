@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
-import { getProfileAsync, getMyProfileAsync, editMyProfileAsync } from '../../Reducers/communitySlice'
+import { Link, useNavigate } from 'react-router-dom'
+import { getMyProfileAsync, editMyProfileAsync } from '../../Reducers/communitySlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Spinner from '../../Spinner'
-import { Button, Col, Container, Form, Row } from 'react-bootstrap'
+import { Button, Col, Form, Row } from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal'
-import Game from '../../models/Games'
-import { display } from '@mui/system'
 
 
 

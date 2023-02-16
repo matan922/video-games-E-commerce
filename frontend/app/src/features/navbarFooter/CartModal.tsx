@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Col, Container, Form, Nav, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { BsCart } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { addToCart, orderAsync, removeAllFromCart, removeFromCart, selectCartList } from '../../Reducers/shopSlice';
-import { CartInterface } from '../../models/Games'
+import { orderAsync, removeAllFromCart, removeFromCart, selectCartList } from '../../Reducers/shopSlice';
 import IconButton from '@mui/material/IconButton/IconButton';
 import StyledBadge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -69,6 +67,7 @@ const CartModal = ({onTotalGamesChange}: any) => {
         for (let i = 0; i < cart.length; i++) {
             cartData.push(cart[i].id)
         }
+
         dispatch(orderAsync({ orderData, orderDetails: cart }));
     }
 

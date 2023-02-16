@@ -2,8 +2,6 @@ import { AsyncThunk } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import React, { useState } from 'react'
 import { Button, Container, Form, Navbar } from 'react-bootstrap';
 import { useAppDispatch } from '../../app/hooks';
-import { searchProfilesAsync } from '../../Reducers/communitySlice';
-// import { searchGamesAsync } from '../../Reducers/shopSlice';
 
 
 const SearchComponent = ({ asyncThunk }: { asyncThunk: AsyncThunk<any, any, any> }) => {
