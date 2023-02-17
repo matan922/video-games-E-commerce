@@ -6,7 +6,6 @@ import {
 } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../app/store";
 import Game, { Genre, AddToCartAction, orderData, CartInterface, GameAndSteamData } from "../models/Games";
-import { NextPage, PrevPage, Temp } from "../models/PaginationInterfaces"
 import {
   getGames,
   getGame,

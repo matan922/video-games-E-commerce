@@ -65,7 +65,7 @@ const MyProfile = () => {
                         <Row>
                             
                             <Col sm={3}>
-                            <p className="fs-1">{displayName}</p>
+                            <p className="fs-1">{display_name}</p>
                                 <img style={{ height: "184px", width: "184px" }} src={avatar} />
                             </Col>
                             <Col sm={7}>

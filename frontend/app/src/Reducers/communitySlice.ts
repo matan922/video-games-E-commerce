@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { getAllProfiles, getProfile, getMyProfile, searchProfiles, editMyProfile } from "../APIs/communityAPI";
+import { getAllProfiles, getProfile, getMyProfile, editMyProfile } from "../APIs/communityAPI";
 import { Profile } from "../models/CommunityInterfaces";
 import { RootState } from "../app/store";
 
@@ -11,7 +11,10 @@ const initialState: Profile = {
     avatar: "",
     bio: "",
     isLoading: false,
-    games_bought: []
+    games_bought: [],
+    profileSearch: "",
+    currentPage: 1,
+    count: 0,
 }
 
 
@@ -32,18 +35,13 @@ export const editMyProfileAsync = createAsyncThunk('community/editMyProfile',
 
 
 export const getAllProfilesAsync = createAsyncThunk('community/getAllProfiles',
-    async () => {
-        return await getAllProfiles();
+    async (data: { pageNumber: number, searchQuery: string }) => {
+        return await getAllProfiles(data.pageNumber, data.searchQuery);
     });
 
-export const searchProfilesAsync = createAsyncThunk('community/searchProfiles',
-    async (searchQuery: string) => {
-        return await searchProfiles(searchQuery);
-    });
-
-// export const editProfileAsync = createAsyncThunk('community/editProfile',
-//     async () => {
-//         return await editProfile();
+// export const searchProfilesAsync = createAsyncThunk('community/searchProfiles',
+//     async (data: { pageNumber: number, searchQuery: string }) => {
+//         return await searchProfiles(data.pageNumber, data.searchQuery);
 //     });
 
 
@@ -52,20 +50,37 @@ export const communitySlice = createSlice({
     name: "community",
     initialState,
     reducers: {
+        updateProfileSearch: (state, action) => {
+            state.profileSearch = action.payload
+        },
 
+        updateCurrentPage: (state, action) => {
+            state.currentPage = action.payload
+        },
+
+        updateCount: (state, action) => {
+            state.count = action.payload
+        }
 
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getProfileAsync.pending, (state, action) => {
+                state.isLoading = true;
+            })
             .addCase(getProfileAsync.fulfilled, (state, action) => {
+                state.isLoading = false;
                 state.bio = action.payload.data.bio;
                 state.avatar = action.payload.data.avatar;
                 state.display_name = action.payload.data.display_name;
                 state.games_bought = action.payload.data.games_bought;
             })
+            .addCase(getAllProfilesAsync.pending, (state, action) => {
+                state.isLoading = true;
+            })
             .addCase(getAllProfilesAsync.fulfilled, (state, action) => {
-                console.log(action.payload)
-                state.profiles = action.payload.data;
+                state.isLoading = false;
+                state.profiles = action.payload.data
             })
             .addCase(getMyProfileAsync.pending, (state, action) => {
                 state.isLoading = true
@@ -84,15 +99,20 @@ export const communitySlice = createSlice({
                 state.display_name = action.payload.data.display_name;
                 state.isLoading = false
             })
-            .addCase(searchProfilesAsync.fulfilled, (state, action) => {
-                state.profiles = action.payload.data
-                state.isLoading = false
-            })
+            // .addCase(searchProfilesAsync.fulfilled, (state, action) => {
+            //     state.profiles = action.payload.data.results
+            //     state.isLoading = false
+            // })
     }
 })
 
+export const { updateProfileSearch, updateCurrentPage, updateCount } = communitySlice.actions;
 
 export const selectProfiles = (state: RootState) => state.community.profiles;
+export const selectIsLoadingProf = (state: RootState) => state.community.isLoading;
+export const selectProfileSearch = (state: RootState) => state.community.profileSearch;
+export const selectCurrentPage = (state: RootState) => state.community.currentPage;
+export const selectCount = (state: RootState) => state.community.count;
 
 export default communitySlice.reducer;
 

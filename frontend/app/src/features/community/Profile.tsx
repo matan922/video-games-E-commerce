@@ -17,13 +17,16 @@ const Profile = () => {
       dispatch(getProfileAsync(number))
     }
   }, [dispatch])
-  console.log("PROFILE")
   const { display_name, avatar, bio, games_bought } = useAppSelector((state) => state.community)
+
+
+
 
   return (
     <div >
       {
         isLoading ? <Spinner></Spinner> :
+
           <div style={{ color: "#66C0F4" }}>
             <Row>
 

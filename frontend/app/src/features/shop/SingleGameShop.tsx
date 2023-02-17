@@ -44,7 +44,7 @@ const SingleGameShop = () => {
               <Col xs={12} md={8}>
                 <GameCarousel></GameCarousel>
                 <br />
-                <Card className='card-single'>
+                <Card style={{backgroundColor: "#1B2838", borderColor: "white"}}>
                   <Card.Body>
                     <Card.Title><h2>Buy {game.my_app.game_name}</h2></Card.Title>
 

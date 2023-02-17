@@ -15,8 +15,8 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
-    display_name = models.CharField(max_length=25, null = True)
-    avatar = models.ImageField(upload_to='avatars/',null = True)
+    display_name = models.CharField(max_length=25, null = True, default='New Account')
+    avatar = models.ImageField(upload_to='avatars/',null = True, default='placeholder.png')
     bio = models.TextField(blank=True,null=True)
     joined_at = models.DateTimeField(auto_now_add = True)
     # games = models.ManyToManyField(Game, null = True)

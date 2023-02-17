@@ -3,8 +3,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-# from gamelist.models import Game
-# from gamelist.serializers import GameSerializer
+from gamelist.pagination import CustomPageNumberPagination
 from profile_user.serializers import ProfileSerializer
 from .models import Profile
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, RetrieveAPIView
@@ -72,25 +71,31 @@ class SingleProfile(RetrieveUpdateAPIView):
         })
 
 
-
-
-
-
-
 class ProfileList(ListAPIView):
     """
     List all profiles.
     """
     permission_classes = [AllowAny]
+    pagination_class = CustomPageNumberPagination
 
-    def get(self, request):
-        query = request.GET.get("search", None)
+
+    def get_queryset(self):
+        query = self.request.GET.get("search", None)
+        profiles = Profile.objects.all()
         if query:
             profiles = Profile.objects.filter(display_name__icontains=query)
+        return profiles
+    
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ProfileSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         else:
-            profiles = Profile.objects.all()
-        serializer = ProfileSerializer(profiles, many=True)
-        return Response(serializer.data)
+            serializer = ProfileSerializer(queryset, many=True)
+            return Response(serializer.data)
+
         
 
 

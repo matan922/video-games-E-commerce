@@ -61,14 +61,17 @@ class Games(ListAPIView):
             games = games.filter(game_name__icontains=query)
         if sort:
             games = games.filter(genres__genre_name__iexact=sort)
-            print(games)
         return games
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
-        serializer = GameSerializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        if page is not None:
+            serializer = GameSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = GameSerializer(queryset, many=True)
+            return Response(serializer.data)
 
     def post(self, request):
         serializer = GameSerializer(data=request.data)

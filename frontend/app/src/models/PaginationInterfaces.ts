@@ -1,10 +1,19 @@
+import { Profile } from "./CommunityInterfaces";
 import Game from "./Games";
 
-export interface Temp {
+export interface GamePagination {
     count:number;
     next:string;
     previous:string;
     results: Game[];
+}
+
+
+export interface CommunityPagination {
+    count:number;
+    next:string;
+    previous:string;
+    results: Profile[];
 }
 
 

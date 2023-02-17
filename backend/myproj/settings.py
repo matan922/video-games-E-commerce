@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shop',
     'gamelist',
     'corsheaders',
     'authentication',
@@ -129,23 +128,22 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-DATABASES = {
-    'default': dj_database_url.parse('postgres://steam_like_db_user:gPjj4g0zq5mtMl2MZ6dOgriFUvTQO3SK@dpg-cfnd7hkgqg415e1tqhh0-a.frankfurt-postgres.render.com/steam_like_db')
-
-}
-
-
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'video_game_store',
-#         'USER': 'root',
-#         'PASSWORD': 'Ma8768769',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
+#     'default': dj_database_url.parse('postgres://steam_like_db_user:gPjj4g0zq5mtMl2MZ6dOgriFUvTQO3SK@dpg-cfnd7hkgqg415e1tqhh0-a.frankfurt-postgres.render.com/steam_like_db')
 # }
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'video_game_store',
+        'USER': 'root',
+        'PASSWORD': 'Ma8768769',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation

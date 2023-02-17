@@ -1,4 +1,3 @@
-import Game from "./Games";
 
 export interface Profile {
     user:number;
@@ -9,8 +8,7 @@ export interface Profile {
     bio:string;
     games_bought: [];
     isLoading:boolean;
+    profileSearch: string;
+    currentPage: number;
+    count: number;
 }
-
-// export interface Games {
-
-// }

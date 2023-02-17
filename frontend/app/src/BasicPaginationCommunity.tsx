@@ -1,23 +1,23 @@
-import react, { useState, useEffect } from 'react';
-import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { getGamesAsync, selectCount, selectCurrentPage, selectGenreSort, selectSearchGame, updateCurrentPage } from './Reducers/shopSlice';
 import  "./css/Shop.css";
+import { getAllProfilesAsync, selectCurrentPage, selectProfileSearch, updateCurrentPage } from './Reducers/communitySlice';
+import { selectCount } from './Reducers/communitySlice';
 
 
-export default function BasicPagination() {
+
+
+export default function BasicPaginationCommunity() {
     const dispatch = useAppDispatch()
     const count = useAppSelector(selectCount)
     const currentPage = useAppSelector(selectCurrentPage)
-    const searchGame = useAppSelector(selectSearchGame)
-    const genreSort = useAppSelector(selectGenreSort)
+    const searchProfile = useAppSelector(selectProfileSearch)
 
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         dispatch(updateCurrentPage(value))
-        dispatch(getGamesAsync({ page: value, searchQuery: searchGame, sortQuery: genreSort }))
+        dispatch(getAllProfilesAsync({ pageNumber: value, searchQuery: searchProfile}))
       }
 
 

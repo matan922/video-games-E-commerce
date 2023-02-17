@@ -11,15 +11,22 @@ import { Container } from "react-bootstrap";
 import Profile from "./features/community/Profile";
 import SingleGameShop from "./features/shop/SingleGameShop";
 import MyProfile from "./features/community/MyProfile";
-import Community from "./features/community/Community";
 import React from "react";
 import LoginPage from "./features/authentication/LoginPage";
 import StaffRegister from "./features/authentication/StaffRegister";
 import Register from "./features/authentication/Register";
 import ErrorFallback from "./ErrorBoundary";
 import { ErrorBoundary } from "react-error-boundary"
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import MainPage from "./MainPage";
 const Shop = React.lazy(() => import('./features/shop/Shop'));
+const Community = React.lazy(() => import('./features/community/Community'));
 
+const initialOptions = {
+  "client-id": 1,
+  currency: "USD",
+  intent: "capture",
+};
 
 function App() {
   const dispatch = useAppDispatch()
@@ -47,8 +54,9 @@ function App() {
       <div style={{ backgroundColor: "#1B2838" }}>
         <Container className="py-5" style={{ backgroundColor: "#2A475E" }}>
 
-          <Routes>
 
+          <Routes>
+            <Route path='/' element={<MainPage/>}/>
             <Route path="shop/" element={
               <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => { }}>
                 <React.Suspense fallback={<div>LOADING...</div>}>
@@ -60,7 +68,15 @@ function App() {
             <Route path="login_page/" element={<LoginPage />} />
             <Route path="register/" element={<Register />} />
             <Route path="register_staff/" element={<StaffRegister />} />
-            <Route path="community/" element={<Community />} />
+
+            <Route path="community/" element={
+              <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => { }}>
+                <React.Suspense fallback={<div>LOADING...</div>}>
+                  <Community />
+                </React.Suspense>
+              </ErrorBoundary>
+            } />
+
             <Route path="myprofile/" element={<MyProfile />} />
 
             <Route path="shop/game/">

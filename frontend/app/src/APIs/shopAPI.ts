@@ -3,13 +3,13 @@ import { access } from "fs";
 import { getConfig } from "../globalVariables/config";
 import { getAllGames, getGenres, getSingleGame, order, steamGames } from "../globalVariables/endpoints";
 import Game, { GameAndSteamData } from "../models/Games";
-import { Temp } from "../models/PaginationInterfaces";
 import Games, { CartInterface, orderData } from "../models/Games";
+import { GamePagination } from "../models/PaginationInterfaces";
 
 
 
 export function getGames(page: number, searchQuery: string, sortQuery: string) {
-  return new Promise<{ data: Temp }>((resolve) =>
+  return new Promise<{ data: GamePagination }>((resolve) =>
     axios.get(getAllGames, { params: { page: page ,search: searchQuery, sort: sortQuery } }).then((res) => resolve({ data: res.data }))
   );
 }

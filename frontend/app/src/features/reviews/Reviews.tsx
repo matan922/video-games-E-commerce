@@ -7,7 +7,6 @@ import Rating from '@mui/material/Rating';
 import { selectIsLogged } from '../../Reducers/authSlice'
 
 const Reviews = () => {
-    const iretroBrown = "rgb(62,56,54)";
     let logged = useAppSelector(selectIsLogged) // Change to if bought, not if logged in.
     let { number } = useParams()
     let dispatch = useAppDispatch()
@@ -17,7 +16,7 @@ const Reviews = () => {
     
     useEffect(() => {
         dispatch(getAllReviewsPerProductAsync(Number(number)))
-    }, [])
+    }, [reviewInfo])
     
 
 
@@ -25,10 +24,11 @@ const Reviews = () => {
         <div className='text-center'>
             <hr />
             {/* <th colSpan={2} style={{ color: iretroBrown }}>Reviews</th> */}
-            <h1 style={{ color: iretroBrown }}>Reviews</h1>
+            <h1 style={{ color: "#C7D5E0" }}>Reviews</h1>
             {reviewInfo.map((review, index) =>
                 <div key={index}>
                     <p>Name: {review.customer_name}</p>
+                    {review.rating} <br />
                     Review: {review.description}
                 </div>
             )}

@@ -2,6 +2,7 @@ import axios from "axios";
 import { getConfig } from "../globalVariables/config";
 import { allProfilesGet, profileGet } from "../globalVariables/endpoints";
 import { Profile } from "../models/CommunityInterfaces";
+import { CommunityPagination } from "../models/PaginationInterfaces";
 
 
 
@@ -38,20 +39,20 @@ export const editMyProfile = (updateData: any) => {
 }
 
 
-export const getAllProfiles = () => {
+export const getAllProfiles = (pageNumber: number, searchQuery: string) => {
   return new Promise<{ data: Profile[] }>((resolve) =>
-    axios.get(allProfilesGet).then((res) => {
-      resolve({ data: res.data })
+    axios.get(allProfilesGet, { params: { page: pageNumber, search: searchQuery } }).then((res) => {
+      resolve({ data: res.data["results"] })
     })
   )
 }
 
 
-export const searchProfiles = (searchQuery: string) => {
-  return new Promise<{ data: Profile[] }>((resolve) =>
-    axios.get(allProfilesGet, { params: { search: searchQuery } }).then((res) => resolve({ data: res.data["profile"] }))
-  );
-}
+// export const searchProfiles = (pageNumber: number, searchQuery: string) => {
+//   return new Promise<{ data: CommunityPagination }>((resolve) =>
+//     axios.get().then((res) => resolve({ data: res.data.results }))
+//   );
+// }
 
 
 

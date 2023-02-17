@@ -61,7 +61,7 @@ function MyNavbar() {
               {isLogged ? (<Nav.Link as={Link} to="/myprofile/">My Profile</Nav.Link>) : null}
             </Nav>
             <Nav className="me-end">
-              <CartModal onTotalGamesChange={storageGame} /> &nbsp;&nbsp;
+              <CartModal onTotalGamesChange={storageGame} />
               {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
               {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
             </Nav>
