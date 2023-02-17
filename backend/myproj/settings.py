@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,15 +130,10 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway', 
-        'USER   ': 'postgres',
-        'PASSWORD': 'IRKpZUspTPSoVKayZTnG',
-        'HOST': 'containers-us-west-36.railway.app', 
-        'PORT': '7416',
-    }
+    'default': dj_database_url.parse('postgres://steam_like_db_user:gPjj4g0zq5mtMl2MZ6dOgriFUvTQO3SK@dpg-cfnd7hkgqg415e1tqhh0-a.frankfurt-postgres.render.com/steam_like_db')
+
 }
+
 
 
 # DATABASES = {
