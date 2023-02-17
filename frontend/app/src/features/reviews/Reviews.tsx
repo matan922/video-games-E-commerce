@@ -18,6 +18,7 @@ const Reviews = () => {
     useEffect(() => {
         dispatch(getAllReviewsPerProductAsync(Number(number)))
     }, [])
+    
 
 
     return (

@@ -132,7 +132,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'video_game_store', 
-        'USER   ': 'zachk',
+        'USER   ': 'postgres',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1', 
         'PORT': '5432',
