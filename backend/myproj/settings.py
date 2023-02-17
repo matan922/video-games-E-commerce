@@ -131,11 +131,11 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'video_game_store', 
+        'NAME': 'railway', 
         'USER   ': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'PASSWORD': 'IRKpZUspTPSoVKayZTnG',
+        'HOST': 'containers-us-west-36.railway.app', 
+        'PORT': '7416',
     }
 }
 
