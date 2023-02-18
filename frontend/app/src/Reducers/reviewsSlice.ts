@@ -1,23 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 import { ReviewState } from '../models/ReviewsInteface';
-import { getReviewsProduct, postReview } from '../APIs/reviewsAPI'
-
-
+import { getReviewsGame, postReview } from '../APIs/reviewsAPI'
 
 
 const initialState: ReviewState = {
-  single_review: { id: "", game: "", user: "", name: "", rating: 0, comment: "" },
-  reviews_product: [],
-  reviews_user: [],
-  allReviews: []
+    reviews: [],
+    newReview: Object.create(null)
 };
 
 
-export const getReviewsProductAsync = createAsyncThunk(
-  'reviews/getReviewsProduct',
-  async (id: number) => {
-    const response = await getReviewsProduct(id);
+export const getReviewsGameAsync = createAsyncThunk(
+  'reviews/getReviewsGame',
+  async (id: string) => {
+    const response = await getReviewsGame(id);
     return response.data;
   }
 )
@@ -42,13 +38,12 @@ export const reviewsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getReviewsProductAsync.fulfilled, (state, action) =>
-      {
-        state.reviews_product = action.payload
+      .addCase(getReviewsGameAsync.fulfilled, (state, action) => {
+        state.reviews = action.payload
       })
       .addCase(postReviewAsync.fulfilled, (state, action) => {
-        state.allReviews = [...state.allReviews, action.payload];
-        console.log(action.payload)
+        state.newReview = action.payload
+        console.log(state.newReview)
       })
   },
 });
@@ -57,9 +52,8 @@ export const reviewsSlice = createSlice({
 
 // export const { getSingleProduct, setSingleProduct } = productSlice.actions;
 
-export const selectProductReviews = (state: RootState) => state.reviews.reviews_product;
-export const selectUserReviews = (state: RootState) => state.reviews.reviews_user;
-export const selectSingleReview = (state: RootState) => state.reviews.single_review;
+export const selectGametReviews = (state: RootState) => state.reviews.reviews;
+export const selectUserReviews = (state: RootState) => state.reviews.newReview;
 
 export default reviewsSlice.reducer;
 

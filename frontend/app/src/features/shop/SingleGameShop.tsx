@@ -7,7 +7,7 @@ import {
 } from "../../Reducers/shopSlice";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useParams } from "react-router-dom";
-// import Reviews from "../reviews/Reviews";
+import Reviews from "../reviews/Reviews";
 import Spinner from "../../Spinner";
 import { Col, Row, Accordion, Button, Card } from "react-bootstrap";
 import GameCarousel from "../../GameCarousel";
@@ -21,7 +21,6 @@ const SingleGameShop = () => {
   const game = useAppSelector(selectGame);
   const { number } = useParams()
   const steamGameData = game?.steam_game?.data
-  console.log(steamGameData)
 
 
   useEffect(() => {
@@ -81,9 +80,7 @@ const SingleGameShop = () => {
                 </div>
               </Col>
             </Row>
-
-
-            {/* <Reviews></Reviews> */}
+            <Reviews></Reviews>
           </>)
         }
       </div>

@@ -44,7 +44,8 @@ class OrderSerializer(serializers.ModelSerializer):
         return Order.objects.create(**validated_data,user=user)
 
 
-class ReviewSerializer(serializers.ModelSerializer): 
+class ReviewSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
     class Meta: 
         model = Review
         fields = '__all__'

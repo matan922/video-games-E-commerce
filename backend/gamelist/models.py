@@ -57,8 +57,7 @@ class OrderDetail(models.Model):
 
 class Review(models.Model):
     game = models.ForeignKey(Game, on_delete = models.SET_NULL, null = True)
-    user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
-    name = models.CharField(max_length = 25, null=True)
+    user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, related_name="user_name")
     rating = models.IntegerField(null = True, blank = True, default = 0)
     comment = models.TextField(max_length = 50, null = True, blank = True)
     createdAt = models.DateTimeField(auto_now_add = True, null=True)
