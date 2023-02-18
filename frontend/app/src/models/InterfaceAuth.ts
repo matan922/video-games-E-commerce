@@ -5,6 +5,7 @@ export interface AuthSlice {
     isLoading: boolean;
     isLogged: boolean;
     isError: boolean;
+    isStaff: boolean;
     access:string | null;
     refresh:string | null;
     message: string;
@@ -26,4 +27,5 @@ export interface LoginAcc {
 export interface MyToken {
     user_id: number;
     username: string;
+    is_staff: boolean;
 }

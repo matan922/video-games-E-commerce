@@ -8,10 +8,16 @@ import { orderAsync, removeAllFromCart, removeFromCart, selectCartList } from '.
 import IconButton from '@mui/material/IconButton/IconButton';
 import StyledBadge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { selectIsLogged } from '../../Reducers/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { totalmem } from 'os';
 
-const CartModal = ({onTotalGamesChange}: any) => {
+
+const CartModal = ({ onTotalGamesChange }: any) => {
     const cart = useAppSelector(selectCartList);
+    const isLogged = useAppSelector(selectIsLogged);
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         full_name: "",
@@ -37,8 +43,16 @@ const CartModal = ({onTotalGamesChange}: any) => {
     };
 
     const handleCloseBillingAndBuy = (e: any) => {
-        setShowBilling(false)
-        onSubmit(e)
+        if (!isLogged) {
+            setShowBilling(false)
+            navigate('/login_page')
+            toast.info("Log in first please.")
+        } else {
+            console.log("first")
+            setShowBilling(false)
+            onSubmit(e)
+        }
+
     };
 
 
@@ -63,12 +77,10 @@ const CartModal = ({onTotalGamesChange}: any) => {
             total: getTotalQuantity(),
         };
 
-        let cartData = []
-        for (let i = 0; i < cart.length; i++) {
-            cartData.push(cart[i].id)
-        }
-
         dispatch(orderAsync({ orderData, orderDetails: cart }));
+        localStorage.removeItem("cart")
+        dispatch(removeAllFromCart(cart))
+        toast.success("Enjoy your new games!")
     }
 
 
@@ -86,7 +98,7 @@ const CartModal = ({onTotalGamesChange}: any) => {
             <Nav.Link>
                 <IconButton aria-label="cart">
                     <StyledBadge badgeContent={onTotalGamesChange} color="secondary">
-                        <ShoppingCartIcon style={{color: "rgba(255, 255, 255, 0.55)"}} onClick={handleShowCart} />
+                        <ShoppingCartIcon style={{ color: "rgba(255, 255, 255, 0.55)" }} onClick={handleShowCart} />
                     </StyledBadge>
                 </IconButton>
             </Nav.Link>

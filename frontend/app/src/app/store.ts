@@ -13,7 +13,7 @@ export const store = configureStore({
     shop: shopReducer,
     auth: authReducer,
     community: communityReducer,
-    review: ReviewReducer,
+    reviews: ReviewReducer,
     categories: categoriesReducer,
   },
 });

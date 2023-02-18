@@ -39,12 +39,6 @@ export const getAllProfilesAsync = createAsyncThunk('community/getAllProfiles',
         return await getAllProfiles(data.pageNumber, data.searchQuery);
     });
 
-// export const searchProfilesAsync = createAsyncThunk('community/searchProfiles',
-//     async (data: { pageNumber: number, searchQuery: string }) => {
-//         return await searchProfiles(data.pageNumber, data.searchQuery);
-//     });
-
-
 
 export const communitySlice = createSlice({
     name: "community",
@@ -99,10 +93,6 @@ export const communitySlice = createSlice({
                 state.display_name = action.payload.data.display_name;
                 state.isLoading = false
             })
-            // .addCase(searchProfilesAsync.fulfilled, (state, action) => {
-            //     state.profiles = action.payload.data.results
-            //     state.isLoading = false
-            // })
     }
 })
 

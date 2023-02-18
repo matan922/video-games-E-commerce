@@ -10,6 +10,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes, api_view
 from .serializers import LogoutSerializer
+from rest_framework.exceptions import AuthenticationFailed
+
 
 
 # ------------------------- LOG IN START ------------------------- #
@@ -23,6 +25,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["is_staff"] = user.is_staff
         # ...
         return token
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)    
+        user = self.user
+
+        if not user:
+            raise AuthenticationFailed({"error":"Invalid username or password"})
+
+        return data
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -37,15 +48,36 @@ class RegisterView(APIView):
         username = request.data.get("username")
         password = request.data.get("password")
         email = request.data.get("email")
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "This email is already being used."}, status=status.HTTP_400_BAD_REQUEST)
         if not (username and password and email):
-            return Response({"error": "Please provide all fields"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Please provide all fields."}, status=status.HTTP_400_BAD_REQUEST)
         try:
             User.objects.get(username=username)
-            return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             user = User.objects.create_user(username=username, password=password, email=email)
             user.save()
-            return Response({"success": "User registered successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"success": "User registered successfully."}, status=status.HTTP_201_CREATED)
+        
+
+class RegisterStaffView(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        email = request.data.get("email")
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "This email is already being used."}, status=status.HTTP_400_BAD_REQUEST)
+        if not (username and password and email):
+            return Response({"error": "Please provide all fields."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            User.objects.get(username=username)
+            return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.is_staff = True
+            user.save()
+            return Response({"success": "User registered successfully."}, status=status.HTTP_201_CREATED)
 
 # ------------------------- REGISTER END ------------------------- #
 

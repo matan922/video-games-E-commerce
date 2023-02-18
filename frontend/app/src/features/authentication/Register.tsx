@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { registerAsync, reset } from "../../Reducers/authSlice";
-import { RegisterAcc } from "../../models/InterfaceAuth";
 
 const Register = () => {
   const [formData, setFormData] = useState({

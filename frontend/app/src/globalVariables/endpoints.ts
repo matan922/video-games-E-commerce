@@ -10,6 +10,7 @@ export const getGenres = "/games_list/genres/"
 export const authLogin = "/auth/api/token/"
 export const authLogout = "/auth/api/token/refresh/"
 export const authRegister = "/auth/register/"
+export const authRegisterStaff = "/auth/register_staff/"
 
 
 // community related endpoints
@@ -21,3 +22,7 @@ export const steamGames = "/games_list/steamapi/"
 // reviews endpoints
 export const reviewGet = "/games_list/reviews/"
 export const reviewPost = "/games_list/new_review/"
+
+
+
+export const postNewGame = "/games_list/games/";

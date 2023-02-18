@@ -21,7 +21,6 @@ const Profile = () => {
 
 
 
-
   return (
     <div >
       {
@@ -37,7 +36,7 @@ const Profile = () => {
               <Col sm={9}>
                 <div style={{ wordWrap: "break-word", color: "#C7D5E0" }}> <p className='fs-4' >Bio:</p> {bio}</div>
                 <br />
-                <div>Games: {games_bought.map((game, i) => <Link to={"/shop/game/"}><br />{game}</Link>)}</div> <br />
+                <div>Games: <br /> {games_bought.map((game, i) => <div>{game}</div>)}</div> <br />
               </Col>
             </Row>
             <br />

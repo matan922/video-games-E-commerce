@@ -13,12 +13,13 @@ import SingleGameShop from "./features/shop/SingleGameShop";
 import MyProfile from "./features/community/MyProfile";
 import React from "react";
 import LoginPage from "./features/authentication/LoginPage";
-import StaffRegister from "./features/authentication/StaffRegister";
 import Register from "./features/authentication/Register";
 import ErrorFallback from "./ErrorBoundary";
 import { ErrorBoundary } from "react-error-boundary"
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import MainPage from "./MainPage";
+import jwt_decode from 'jwt-decode';
+import { MyToken } from "./models/InterfaceAuth";
 const Shop = React.lazy(() => import('./features/shop/Shop'));
 const Community = React.lazy(() => import('./features/community/Community'));
 
@@ -33,6 +34,7 @@ function App() {
 
   const myToken = JSON.parse(localStorage.getItem('token') as string)
   const accessToken = myToken?.access
+  
   useEffect(() => {
     if (accessToken) {
       dispatch(isLoggedOn())
@@ -67,7 +69,6 @@ function App() {
 
             <Route path="login_page/" element={<LoginPage />} />
             <Route path="register/" element={<Register />} />
-            <Route path="register_staff/" element={<StaffRegister />} />
 
             <Route path="community/" element={
               <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => { }}>

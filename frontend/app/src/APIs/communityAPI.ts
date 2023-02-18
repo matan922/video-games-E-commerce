@@ -9,7 +9,7 @@ import { CommunityPagination } from "../models/PaginationInterfaces";
 export const getProfile = (id: string) => {
   return new Promise<{ data: Profile }>((resolve) =>
     axios.get(profileGet + id).then((res) => {
-      resolve({ data: res.data["profile"] })
+      resolve({ data: res.data })
     })
   );
 }
@@ -17,7 +17,7 @@ export const getProfile = (id: string) => {
 export const getMyProfile = () => {
   return new Promise<{ data: Profile }>((resolve) =>
     axios.get(profileGet, getConfig()).then((res) => {
-      resolve({ data: res.data["profile"] })
+      resolve({ data: res.data })
     })
   );
 }
@@ -33,7 +33,7 @@ export const editMyProfile = (updateData: any) => {
 
   return new Promise<{ data: Profile }>((resolve) =>
     axios.put(profileGet, updateData, config).then((res) => {
-      resolve({ data: res.data["profile"] })
+      resolve({ data: res.data })
     })
   );
 }
@@ -46,13 +46,3 @@ export const getAllProfiles = (pageNumber: number, searchQuery: string) => {
     })
   )
 }
-
-
-// export const searchProfiles = (pageNumber: number, searchQuery: string) => {
-//   return new Promise<{ data: CommunityPagination }>((resolve) =>
-//     axios.get().then((res) => resolve({ data: res.data.results }))
-//   );
-// }
-
-
-

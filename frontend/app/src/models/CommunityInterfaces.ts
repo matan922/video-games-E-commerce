@@ -12,3 +12,5 @@ export interface Profile {
     currentPage: number;
     count: number;
 }
+
+

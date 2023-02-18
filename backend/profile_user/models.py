@@ -26,10 +26,11 @@ class Profile(models.Model):
         return self.user.username
 
     def games_bought(self):
-        games = []
+        game_ids = []
         for order in self.user.orders.all():
             for order_detail in order.games.all():
-                games.append(order_detail.game)
-        return games
+                game_ids.append(order_detail.game.id)
+        print(game_ids)
+        return Game.objects.filter(id__in=game_ids)
 
 

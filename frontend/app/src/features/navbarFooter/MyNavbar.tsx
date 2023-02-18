@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useEffect, useState } from "react";
-import { logoutAsync, reset, selectIsLogged, selectUserName } from "../../Reducers/authSlice";
+import { logoutAsync, reset, selectIsLogged, selectIsStaff, selectUserName } from "../../Reducers/authSlice";
 import {
   selectCartList
 } from "../../Reducers/shopSlice";
@@ -17,6 +17,7 @@ function MyNavbar() {
   const navigate = useNavigate();
   const isLogged = useAppSelector(selectIsLogged);
   const username = useAppSelector(selectUserName);
+  const isStaff = useAppSelector(selectIsStaff);
 
   const cart = useAppSelector(selectCartList);
   const [storageGame, setStorageGame] = useState(0)
@@ -62,6 +63,8 @@ function MyNavbar() {
             </Nav>
             <Nav className="me-end">
               <CartModal onTotalGamesChange={storageGame} />
+              {isStaff ? <Nav.Link as={Link} to={"http://127.0.0.1:8000/admin/"}>Adming page</Nav.Link> : null}
+              {isLogged ? null : <Nav.Link as={Link} to="/register_staff/">Staff Register</Nav.Link>}
               {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
               {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
             </Nav>

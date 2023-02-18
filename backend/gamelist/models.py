@@ -56,24 +56,15 @@ class OrderDetail(models.Model):
 
 
 class Review(models.Model):
-    RATING_OPTIONS = (
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
-    )
-    user = models.ForeignKey(User, on_delete = models.CASCADE, null = False)
-    customer_name = models.CharField(max_length = 100, null = False, blank = False)
-    game = models.ForeignKey(Game, on_delete = models.CASCADE)
-    rating = models.PositiveSmallIntegerField(choices = RATING_OPTIONS, null = False)
-    description = models.CharField(max_length = 500)
+    game = models.ForeignKey(Game, on_delete = models.SET_NULL, null = True)
+    user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
+    name = models.CharField(max_length = 25, null=True)
+    rating = models.IntegerField(null = True, blank = True, default = 0)
+    comment = models.TextField(max_length = 50, null = True, blank = True)
+    createdAt = models.DateTimeField(auto_now_add = True, null=True)
 
     def __str__(self):
         return str(self.rating)
-
-
-
 
 
 # class Genre(models.Model):

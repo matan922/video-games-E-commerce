@@ -39,7 +39,7 @@ const MyProfile = () => {
 
         dispatch(editMyProfileAsync(formData))
     };
-
+    
 
     useEffect(() => {
         dispatch(getMyProfileAsync())
@@ -63,15 +63,16 @@ const MyProfile = () => {
                 isLoading ? <Spinner></Spinner> :
                     <div style={{ color: "#66C0F4" }}>
                         <Row>
-                            
+
                             <Col sm={3}>
-                            <p className="fs-1">{display_name}</p>
+                                <p className="fs-1">{display_name}</p>
                                 <img style={{ height: "184px", width: "184px" }} src={avatar} />
                             </Col>
                             <Col sm={7}>
-                                <div   style={{ wordWrap: "break-word", color: "#C7D5E0" }}> <p className='fs-4' >Bio:</p> {bio}</div>
+                                <div style={{ wordWrap: "break-word", color: "#C7D5E0" }}> <p className='fs-4' >Bio:</p> {bio}</div>
                                 <br />
-                                <div>Games: {games_bought.map((game, i) => <Link to={"/shop/game/"}><br />{game}</Link>)}</div> <br />
+                                <div>Games: {games_bought.map((game, i) => <div>{game}</div>)}
+                                </div> <br />
                             </Col>
                             <Col sm={2}>
                                 <Button variant="primary" onClick={handleShow}>

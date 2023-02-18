@@ -23,13 +23,14 @@ from .pagination import CustomPageNumberPagination
 
 
 # ------------------------- Genres Start ------------------------
+# Get all genres. (categories)
 class Genres(APIView):
     def get(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
         return Response(serializer.data)
 
-
+# Get a single genre.
 class GenreDetail(APIView):
     def get_object(self, pk):
         try:
@@ -52,17 +53,20 @@ class Games(ListAPIView):
     serializer_class = GameSerializer
     pagination_class = CustomPageNumberPagination
 
-
+    # Get a queryset of all games or filter them in certain ways.
     def get_queryset(self):
         query = self.request.GET.get("search", None)
         sort = self.request.GET.get("sort", None)
         games = Game.objects.all()
         if query:
+            # Used to filter games based on user input.
             games = games.filter(game_name__icontains=query)
         if sort:
+            # Used to filter games based on category a user has chose.
             games = games.filter(genres__genre_name__iexact=sort)
         return games
 
+    # Gets all games (or filtered ones) and paginate them from the queryset above.
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
@@ -73,40 +77,13 @@ class Games(ListAPIView):
             serializer = GameSerializer(queryset, many=True)
             return Response(serializer.data)
 
+    # Post a new game in the shop.
     def post(self, request):
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-    # def get(self, request):
-    #     query = request.GET.get("search", None)
-    #     page = request.GET.get("page", 1)
-    #     if query:
-    #         games = Game.objects.filter(game_name__icontains=query)
-    #     else:
-    #         games = Game.objects.all()
-
-    #     paginator = Paginator(games, 10)
-    #     try:
-    #         games_page = paginator.page(page)
-    #     except PageNotAnInteger:
-    #         games_page = paginator.page(1)
-    #     except EmptyPage:
-    #         games_page = paginator.page(paginator.num_pages)
-    #     serializer = GameSerializer(games_page, many=True)
-    #     return Response(serializer.data)
-        
-        # query = request.GET.get("search", None)
-        # if query:
-        #     games = Game.objects.filter(game_name__icontains=query)
-        # else:
-        #     games = Game.objects.all()
-        # serializer = GameSerializer(games, many=True)
-        # return Response(serializer.data)
-
 
 
 class GameDetail(APIView):
@@ -116,7 +93,8 @@ class GameDetail(APIView):
             return Game.objects.get(pk=pk)
         except Game.DoesNotExist:
             raise Http404
-
+        
+    # Get single game
     def get(self, request, pk):
         game = self.get_object(pk)
         genres = Genre.objects.all()
@@ -127,6 +105,7 @@ class GameDetail(APIView):
         full_game_info["steam_game"] = steam_game.json()[str(game.appid)]
         return Response(full_game_info)
 
+    # Update a game
     def put(self, request, pk):
         game = self.get_object(pk)
         serializer = GameSerializer(game, data=request.data)
@@ -135,6 +114,7 @@ class GameDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # Delete from shop
     def delete(self, request, pk):
         game = self.get_object(pk)
         game.delete()
@@ -179,16 +159,18 @@ class OrderGames(APIView):
 
 # create a new order for the authenticated user.
     def post(self, request):
+        # give a context for the user and his order data and saving it in Order table.
         serializer = OrderSerializer(data=request.data["orderData"], context={'user': request.user})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            print(serializer.data)
+            # looping through the order details
             for item in request.data["orderDetails"]:
-                # print(request.data)
+                # creating a new object pushing an item's id and taking the last order's id that was pushed in the database.
                 order_dets = {}
                 order_dets["game"] = item["id"]
                 order_dets['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
                 serializer2 = OrderDetailSerializer(data=order_dets)
+                # pushing the new object into OrderDetail table.
                 if serializer2.is_valid(raise_exception=True):
                     serializer2.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -196,36 +178,54 @@ class OrderGames(APIView):
 
 
 
-
-
 class ReviewView(APIView):
+    serializer_class = ReviewSerializer
 
     def get(self, request, pk):
         reviews = Review.objects.filter(game=Game.objects.get(id=pk))
-        serializer = ReviewSerializer(reviews, many=True)
-        print(serializer.data)
+        serializer = self.serializer_class(reviews, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        data = request.data
-        user = request.user
-        print(data)
-        print(user)
-        if request.user.is_authenticated:
-            game = Game.objects.get(id = data['id'])
-            print("in if")
-            reviewing_user = User.objects.get(username = user.username)
-            Review.objects.create(
-                game = game, 
-                user = reviewing_user, 
-                customer_name = user.username,
-                rating = data['rating'], 
-                description = data['description'])
-            return Response({"succecss": "Added."}, status = status.HTTP_200_OK)
-        return Response({"error": "Please log in to leave a review."}, status=status.HTTP_401_UNAUTHORIZED)
+        serializer = ReviewSerializer(data = request.data, context = {"user": request.user})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
-# Used to populate the db with images from steam api. (only main game images) 
+# class ReviewView(APIView):
+
+#     def get(self, request, pk):
+#         reviews = Review.objects.filter(game=Game.objects.get(id=pk))
+#         serializer = ReviewSerializer(reviews, many=True)
+#         print(serializer.data)
+#         return Response(serializer.data)
+
+#     def post(self, request):
+#         data = request.data
+#         user = request.user
+#         print(data)
+#         print(user)
+#         if request.user.is_authenticated:
+#             game = Game.objects.get(id = data['id'])
+#             reviewing_user = User.objects.get(username = user.username)
+#             print(reviewing_user)
+#             Review.objects.create(
+#                 game = game, 
+#                 user = reviewing_user, 
+#                 customer_name = user.username,
+#                 rating = data['rating'], 
+#                 description = data['description'])
+#             return Response({"succecss": "Added."}, status = status.HTTP_200_OK)
+#         return Response({"error": "Please log in to leave a review."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+'''
+Used to populate the db with images from steam api
+to not go over the cap of requests to steam by just 
+scrolling through the app. (only main game images)
+ ''' 
 class SteamGames(APIView):
     def get(self, request):
         games = Game.objects.all().filter(game_image = "")
@@ -244,15 +244,3 @@ class SteamGames(APIView):
                 game.save()
                 
         return Response("all done")
-
-
-        # for game in games:
-        #     # print(game.appid)
-        # print(images_to_upload)
-        # print(test.appid)
-        # for img in images_to_upload:
-
-        # print(game_details)
-        # steam_game["header_image"]
-        # test.game_image = "nice"
-        # test.save()

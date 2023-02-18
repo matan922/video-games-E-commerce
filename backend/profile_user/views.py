@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAu
 from rest_framework.response import Response
 from rest_framework import status
 from gamelist.pagination import CustomPageNumberPagination
+from gamelist.serializers import GameSerializer
 from profile_user.serializers import ProfileSerializer
 from .models import Profile
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, RetrieveAPIView
@@ -42,17 +43,13 @@ class SingleProfile(RetrieveUpdateAPIView):
             profile = get_object_or_404(Profile, user=self.request.user)
         else:
             raise NotAuthenticated
+        
         return profile
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        games = instance.games_bought()
-        games_json = json.dumps([{"game_name": game.game_name} for game in games])
-        return Response({
-            "profile": serializer.data,
-            "games_json": games_json
-        })
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -62,13 +59,7 @@ class SingleProfile(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         
-        # Add this code to return the complete profile data
-        games = instance.games_bought()
-        games_json = json.dumps([{"game_name": game.game_name} for game in games])
-        return Response({
-            "profile": serializer.data,
-            "games_json": games_json
-        })
+        return Response(serializer.data)
 
 
 class ProfileList(ListAPIView):

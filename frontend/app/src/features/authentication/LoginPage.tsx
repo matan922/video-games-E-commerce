@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginAsync, reset } from "../../Reducers/authSlice";
-import { LoginAcc } from "../../models/InterfaceAuth";
 
 
 
@@ -19,19 +18,22 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { userName, isLoading, isSuccess, isLogged } = useAppSelector(
+  const { userName, isLoading, isSuccess, isLogged, isError, message } = useAppSelector(
     (state) => state.auth
   );
-
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/")
     }
+    
+    if (isError) {
+      toast.error(message)
+    }
 
     dispatch(reset())
 
-  }, [userName, isSuccess, navigate, dispatch])
+  }, [userName, isSuccess, navigate, isError])
 
 
   const onChange = (e: any) => {
@@ -44,11 +46,14 @@ const LoginPage = () => {
   const onSubmit = (e: any) => {
     e.preventDefault();
 
+    
     const userData = {
       username,
       password,
     }
-    dispatch(loginAsync(userData))
+    if (userData.username != "" && userData.password != "") {
+      dispatch(loginAsync(userData))
+    } else {toast.error("Those fields can't stay empty.")}
   };
 
   return (

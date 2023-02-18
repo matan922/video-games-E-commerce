@@ -1,11 +1,16 @@
 import axios from "axios";
-import { authRegister, authLogin } from "../globalVariables/endpoints";
+import { authRegister, authLogin, authRegisterStaff } from "../globalVariables/endpoints";
 import { LoginAcc, RegisterAcc } from "../models/InterfaceAuth";
 
 // register user
 
 const register = async (userData: RegisterAcc) => {
   const response = await axios.post(authRegister, userData);
+  return response.data;
+};
+
+const registerStaff = async (userData: RegisterAcc) => {
+  const response = await axios.post(authRegisterStaff, userData);
   return response.data;
 };
 
@@ -24,6 +29,7 @@ const login = async (userData: LoginAcc) => {
   if (response.data) {
     localStorage.setItem("token", JSON.stringify(response.data));
   }
+  console.log(response.data)
   return response.data;
 };
 
@@ -33,6 +39,7 @@ const login = async (userData: LoginAcc) => {
 
 const authService = {
   register,
+  registerStaff,
   logout,
   login,
 };

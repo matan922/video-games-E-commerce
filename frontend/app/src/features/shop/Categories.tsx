@@ -2,22 +2,19 @@ import React, { useEffect } from 'react'
 import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getCategoriesAsync, selectCategories } from '../../Reducers/categoriesSlice'
-import { selectCurrentPage, selectGenreSort, selectSearchGame, updateGenreSort } from '../../Reducers/shopSlice'
+import { getGamesAsync, selectCurrentPage, selectGenreSort, selectSearchGame, updateGenreSort } from '../../Reducers/shopSlice'
 import "../../css/Shop.css"
 
 const Categories = () => {
     const dispatch = useAppDispatch()
     const categories = useAppSelector(selectCategories)
     const searchGame = useAppSelector(selectSearchGame)
-    const currentPage = useAppSelector(selectCurrentPage)
-
-
-
-    // console.log(categories.map((genre) => genre.genre_name))
+    const genreSort = useAppSelector(selectGenreSort)
 
     useEffect(() => {
         dispatch(getCategoriesAsync())
     }, [dispatch])
+
 
 
     return (
