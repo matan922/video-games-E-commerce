@@ -97,7 +97,6 @@ class GameDetail(APIView):
     # Get single game
     def get(self, request, pk):
         game = self.get_object(pk)
-        genres = Genre.objects.all()
         serializer = GameSerializer(game)
         steam_game = requests.get(f'https://store.steampowered.com/api/appdetails?appids={game.appid}')
         full_game_info = {}
@@ -188,37 +187,11 @@ class ReviewView(APIView):
 
     def post(self, request):
         serializer = ReviewSerializer(data = request.data, context = {"user": request.user})
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-
-# class ReviewView(APIView):
-
-#     def get(self, request, pk):
-#         reviews = Review.objects.filter(game=Game.objects.get(id=pk))
-#         serializer = ReviewSerializer(reviews, many=True)
-#         print(serializer.data)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         data = request.data
-#         user = request.user
-#         print(data)
-#         print(user)
-#         if request.user.is_authenticated:
-#             game = Game.objects.get(id = data['id'])
-#             reviewing_user = User.objects.get(username = user.username)
-#             print(reviewing_user)
-#             Review.objects.create(
-#                 game = game, 
-#                 user = reviewing_user, 
-#                 customer_name = user.username,
-#                 rating = data['rating'], 
-#                 description = data['description'])
-#             return Response({"succecss": "Added."}, status = status.HTTP_200_OK)
-#         return Response({"error": "Please log in to leave a review."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 '''

@@ -46,11 +46,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+
     class Meta: 
         model = Review
         fields = '__all__'
 
     def create(self, validated_data): 
         user = self.context['user']
-        return Review.objects.create(**validated_data, user = user)
+        return Review.objects.create(**validated_data, user=user)
     

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from rest_framework.serializers import ValidationError
 # Create your models here.
 
 
@@ -64,6 +65,16 @@ class Review(models.Model):
 
     def __str__(self):
         return str(self.rating)
+
+    def clean(self):
+        purchased_games = [order_detail.game for order in self.user.orders.all() for order_detail in order.games.all()]
+        if self.game not in purchased_games:
+            raise ValidationError('You can only review games that you have purchased.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
 
 
 # class Genre(models.Model):

@@ -28,14 +28,11 @@ const Shop = () => {
   const loading = useAppSelector(selectLoading)
 
 
-
-
   useEffect(() => {
     const searchQuery = ""
     dispatch(getGamesAsync({ page: currentPage, searchQuery: searchQuery, sortQuery: genreSort }))
   }, [dispatch, genreSort]);
 
-  // console.log(games.map(game => game.appid))
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

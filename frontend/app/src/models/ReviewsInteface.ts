@@ -11,4 +11,7 @@ export interface Review {
 export interface ReviewState {
   reviews: Review[];
   newReview: Review;
+  isError: boolean;
+  isSuccess: boolean;
+  message: string;
 };
