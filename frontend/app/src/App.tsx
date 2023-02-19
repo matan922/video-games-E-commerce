@@ -3,9 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import MyNavbar from "./features/navbarFooter/MyNavbar";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { isLoggedOn, isLoggedOff } from "./Reducers/authSlice";
-import { loadCart } from "./Reducers/shopSlice";
+import { loadCart, orderAsync } from "./Reducers/shopSlice";
 import Footer from "./features/navbarFooter/Footer";
 import { Container } from "react-bootstrap";
 import Profile from "./features/community/Profile";
@@ -15,13 +15,12 @@ import React from "react";
 import LoginPage from "./features/authentication/LoginPage";
 import Register from "./features/authentication/Register";
 import ErrorFallback from "./ErrorBoundary";
-import { ErrorBoundary } from "react-error-boundary"
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { ErrorBoundary } from "react-error-boundary";
 import MainPage from "./MainPage";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
 import { MyToken } from "./models/InterfaceAuth";
-const Shop = React.lazy(() => import('./features/shop/Shop'));
-const Community = React.lazy(() => import('./features/community/Community'));
+const Shop = React.lazy(() => import("./features/shop/Shop"));
+const Community = React.lazy(() => import("./features/community/Community"));
 
 const initialOptions = {
   "client-id": 1,
@@ -30,53 +29,62 @@ const initialOptions = {
 };
 
 function App() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const myToken = JSON.parse(localStorage.getItem('token') as string)
-  const accessToken = myToken?.access
-  
+  const myToken = JSON.parse(localStorage.getItem("token") as string);
+  const accessToken = myToken?.access;
+
   useEffect(() => {
     if (accessToken) {
-      dispatch(isLoggedOn())
-    } if (accessToken == null) {
-      dispatch(isLoggedOff())
+      dispatch(isLoggedOn());
     }
-  }, [dispatch])
+    if (accessToken == null) {
+      dispatch(isLoggedOff());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(loadCart())
-  }, [dispatch])
-
+    dispatch(loadCart());
+  }, [dispatch]);
 
 
   return (
-    <div >
-
+    <div>
       <MyNavbar></MyNavbar>
       <div style={{ backgroundColor: "#1B2838" }}>
         <Container className="py-5" style={{ backgroundColor: "#2A475E" }}>
-
-
           <Routes>
-            <Route path='/' element={<MainPage/>}/>
-            <Route path="shop/" element={
-              <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => { }}>
-                <React.Suspense fallback={<div>LOADING...</div>}>
-                  <Shop />
-                </React.Suspense>
-              </ErrorBoundary>
-            } />
+            <Route path="/" element={<MainPage />} />
+            <Route
+              path="shop/"
+              element={
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallback}
+                  onReset={() => {}}
+                >
+                  <React.Suspense fallback={<div>LOADING...</div>}>
+                    <Shop />
+                  </React.Suspense>
+                </ErrorBoundary>
+              }
+            />
 
             <Route path="login_page/" element={<LoginPage />} />
             <Route path="register/" element={<Register />} />
 
-            <Route path="community/" element={
-              <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => { }}>
-                <React.Suspense fallback={<div>LOADING...</div>}>
-                  <Community />
-                </React.Suspense>
-              </ErrorBoundary>
-            } />
+            <Route
+              path="community/"
+              element={
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallback}
+                  onReset={() => {}}
+                >
+                  <React.Suspense fallback={<div>LOADING...</div>}>
+                    <Community />
+                  </React.Suspense>
+                </ErrorBoundary>
+              }
+            />
 
             <Route path="myprofile/" element={<MyProfile />} />
 
@@ -89,21 +97,16 @@ function App() {
               <Route index element={<Profile />} />
               <Route path=":number" element={<Profile />} />
             </Route>
-
           </Routes>
         </Container>
-
       </div>
       <Footer></Footer>
       <ToastContainer />
-    </div >
+    </div>
   );
 }
 
 export default App;
-
-
-
 
 // return (
 //   <div >
