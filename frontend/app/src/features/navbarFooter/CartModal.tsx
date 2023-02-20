@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Form, Nav, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -9,27 +9,26 @@ import {
   removeAllFromCart,
   removeFromCart,
   selectCartList,
-} from "../../Reducers/shopSlice";
+} from "../../Reducers/orderSlice";
 import IconButton from "@mui/material/IconButton/IconButton";
 import StyledBadge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { selectIsLogged } from "../../Reducers/authSlice";
 import { useNavigate } from "react-router-dom";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { selectAddress, selectCity, selectFullName, selectTotal, selectZip, updateAddress, updateCity, updateFullName, updateTotal, updateZip } from "../../Reducers/orderSlice";
+import MyPaypalButton from "../mypaypal/MyPaypalButton";
 
 
 const CartModal = ({ onTotalGamesChange }: any) => {
   const cart = useAppSelector(selectCartList);
   const isLogged = useAppSelector(selectIsLogged);
+  const zip = useAppSelector(selectZip);
+  const city = useAppSelector(selectCity);
+  const full_name = useAppSelector(selectFullName);
+  const total = useAppSelector(selectTotal);
+  const address = useAppSelector(selectAddress);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    full_name: "",
-    address: "",
-    city: "",
-    zip: "",
-  });
 
   // -------------------- Cart Modal ----------------------
   const [showCart, setShowCart] = useState(false);
@@ -58,29 +57,25 @@ const CartModal = ({ onTotalGamesChange }: any) => {
     }
   };
 
-  const { full_name, address, city, zip } = formData;
 
-  const onChange = (e: any) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     const orderData = {
-      full_name,
-      address,
-      city,
-      zip,
-      total: getTotalQuantity(),
+      full_name: full_name,
+      address: address,
+      city: city,
+      zip: zip,
+      total: total,
     };
-
-    dispatch(orderAsync({ orderData, orderDetails: cart }));
-    localStorage.removeItem("cart");
-    dispatch(removeAllFromCart(cart));
-    toast.success("Enjoy your new games!");
+    if (zip == "" || city == "" || address == "" && full_name == "" ) {
+        toast.error("Fill all the fields please!")
+    } else {
+        dispatch(orderAsync({ orderData, orderDetails: cart }));
+        localStorage.removeItem("cart");
+        dispatch(removeAllFromCart(cart));
+        toast.success("Enjoy your new games!");    
+    }
   };
 
   const getTotalQuantity = () => {
@@ -91,12 +86,11 @@ const CartModal = ({ onTotalGamesChange }: any) => {
     return Math.round((total + Number.EPSILON) * 100) / 100;
   };
 
-  const initialOptions = {
-    "client-id":
-      "AY_C3wNYUFG2a1B7FEL4ePgWaAFcnVczmpPj5GAfsuxMIXNMMisI3--EpbI8kMmqQa4DaAX74bPFQxRT",
-    currency: "USD",
-    intent: "capture",
-  };
+  useEffect(() => {
+    dispatch(updateTotal(getTotalQuantity()));
+  }, [getTotalQuantity()])
+  
+
 
   return (
     <div>
@@ -151,7 +145,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div>Total: {getTotalQuantity()}$</div>
+          <div>Total: {total}$</div>
           <Button variant="secondary" onClick={handleCloseCart}>
             Close
           </Button>
@@ -179,7 +173,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
                       id="full_name"
                       name="full_name"
                       value={full_name}
-                      onChange={onChange}
+                      onChange={(e) => dispatch(updateFullName(e.target.value))}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -190,7 +184,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
                       id="address"
                       name="address"
                       value={address}
-                      onChange={onChange}
+                      onChange={(e) => dispatch(updateAddress(e.target.value))}
                     />
                   </Form.Group>
                 </Form>
@@ -204,7 +198,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
                     id="city"
                     name="city"
                     value={city}
-                    onChange={onChange}
+                    onChange={(e) => dispatch(updateCity(e.target.value))}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -215,7 +209,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
                     id="zip"
                     name="zip"
                     value={zip}
-                    onChange={onChange}
+                    onChange={(e) => dispatch(updateZip(e.target.value))}
                   />
                 </Form.Group>
               </Col>
@@ -229,9 +223,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
           <Button variant="primary" onClick={handleCloseBillingAndBuy}>
             Buy!
           </Button>
-          <PayPalScriptProvider options={initialOptions}>
-            <PayPalButtons />
-          </PayPalScriptProvider>
+          <MyPaypalButton/>
         </Modal.Footer>
       </Modal>
     </div>

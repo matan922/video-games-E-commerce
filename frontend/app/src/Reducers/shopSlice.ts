@@ -9,7 +9,6 @@ import Game, { Genre, AddToCartAction, orderData, CartInterface, GameAndSteamDat
 import {
   getGames,
   getGame,
-  makeOrder,
 } from "../APIs/shopAPI";
 import { CreateAxiosDefaults } from "axios";
 
@@ -24,8 +23,6 @@ export interface ShopState {
   countOfGames: number;
   genre: Genre[]
   game: GameAndSteamData;
-  cartList: CartInterface[]
-  order: any[]
   steamAppid: any
   message: string;
   loading: boolean;
@@ -41,8 +38,6 @@ const initialState: ShopState = {
   countOfGames: 0,
   game: Object.create(null),
   genre: [],
-  cartList: [],
-  order: [],
   message: "",
   steamAppid: {},
   loading: false,
@@ -58,10 +53,6 @@ export const getSingleGameAsync = createAsyncThunk("shop/getGame", async (id: st
   return response.data;
 });
 
-export const orderAsync = createAsyncThunk("shop/makeOrder", async (data: { orderData: orderData, orderDetails: CartInterface[] }) => {
-  const response = await makeOrder(data.orderData, data.orderDetails);
-  return response.data;
-});
 
 
 
@@ -69,44 +60,6 @@ export const shopSlice = createSlice({
   name: "shop",
   initialState,
   reducers: {
-
-    loadCart: (state) => {
-      if (localStorage.getItem('cart')) {
-        state.cartList = JSON.parse(localStorage.getItem('cart') as string)
-      }
-    },
-
-    addToCart: (state, action) => {
-
-      let game = action.payload;
-      let gameExistsInCart = state.cartList.find(g => g.id === game.id);
-      if (!gameExistsInCart) {
-        game = { ...game }
-        state.cartList.push(game);
-      }
-      localStorage.setItem('cart', JSON.stringify(state.cartList) as string)
-    },
-
-    removeFromCart: (state, action) => {
-      let game = action.payload;
-      let gameExistsInCart = state.cartList.find(g => g.id === game.id);
-      if (gameExistsInCart) {
-        state.cartList = state.cartList.filter(g => g.id !== game.id);
-
-        let cart = JSON.parse(localStorage.getItem("cart") as string);
-        let filteredCart = cart.filter((g: Game) => g.id !== game.id);
-        localStorage.setItem("cart", JSON.stringify(filteredCart));
-        if (filteredCart.length <= 0) {
-          localStorage.removeItem("cart");
-        }
-      }
-    },
-
-    removeAllFromCart: (state, action) => {
-      state.cartList.splice(0, state.cartList.length);
-      localStorage.removeItem("cart");
-    },
-
     updateCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
@@ -140,18 +93,12 @@ export const shopSlice = createSlice({
         state.loading = false;
         state.game = action.payload
       })
-      .addCase(orderAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        state.order = action.payload;
-
-      })
   },
 });
 
-export const { resetGame, loadCart, addToCart, removeFromCart, removeAllFromCart, updateCurrentPage, updateSearchGame, updateGenreSort } = shopSlice.actions;
+export const { resetGame, updateCurrentPage, updateSearchGame, updateGenreSort } = shopSlice.actions;
 export const selectGameList = (state: RootState) => state.shop.gamesList;
 export const selectGame = (state: RootState) => state.shop.game;
-export const selectCartList = (state: RootState) => state.shop.cartList;
 export const selectLoading = (state: RootState) => state.shop.loading;
 export const selectNextPage = (state: RootState) => state.shop.nextPage;
 export const selectPrevPage = (state: RootState) => state.shop.prevPage;

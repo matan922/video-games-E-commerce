@@ -3,7 +3,6 @@ import {
   selectGame,
   getSingleGameAsync,
   resetGame,
-  addToCart,
 } from "../../Reducers/shopSlice";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { useParams } from "react-router-dom";
@@ -12,7 +11,7 @@ import Spinner from "../../Spinner";
 import { Col, Row, Accordion, Button, Card } from "react-bootstrap";
 import GameCarousel from "../../GameCarousel";
 import "../../css/SingleGame.css"
-
+import { addToCart } from "../../Reducers/orderSlice";
 
 
 

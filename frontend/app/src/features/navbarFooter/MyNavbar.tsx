@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { logoutAsync, reset, selectIsLogged, selectIsStaff, selectUserName } from "../../Reducers/authSlice";
 import {
   selectCartList
-} from "../../Reducers/shopSlice";
+} from "../../Reducers/orderSlice";
 import CartModal from "./CartModal";
 
 

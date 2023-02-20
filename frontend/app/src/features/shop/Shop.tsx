@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   getGamesAsync,
   selectGameList,
-  addToCart,
   selectCurrentPage,
   selectSearchGame,
   updateSearchGame,
@@ -16,6 +15,8 @@ import Categories from "./Categories";
 import Spinner from "../../Spinner";
 import BasicPaginationGames from "../../BasicPaginationGames";
 import { toast } from "react-toastify";
+import { addToCart } from "../../Reducers/orderSlice";
+
 
 
 const Shop = () => {

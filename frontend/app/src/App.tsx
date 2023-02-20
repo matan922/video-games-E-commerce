@@ -5,7 +5,7 @@ import MyNavbar from "./features/navbarFooter/MyNavbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isLoggedOn, isLoggedOff } from "./Reducers/authSlice";
-import { loadCart, orderAsync } from "./Reducers/shopSlice";
+import { loadCart, orderAsync } from "./Reducers/orderSlice";
 import Footer from "./features/navbarFooter/Footer";
 import { Container } from "react-bootstrap";
 import Profile from "./features/community/Profile";

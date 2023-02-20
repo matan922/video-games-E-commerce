@@ -37,7 +37,7 @@ const Reviews = () => {
     if (number) {
       dispatch(getReviewsGameAsync(number));
     }
-  }, [number, isSuccess]);
+  }, [number, isSuccess, isError]);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();

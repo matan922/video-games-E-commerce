@@ -20,12 +20,6 @@ export function getGame(id: string) {
   );
 }
 
-export function makeOrder(orderData: orderData, orderDetails: CartInterface[]) {
-  return new Promise<{ data: any }>((resolve) =>
-    axios.post(order, { "orderData": orderData, "orderDetails": orderDetails }, getConfig()).then((res) => resolve({ data: res.data }))
-  );
-}
-
 
 
 
