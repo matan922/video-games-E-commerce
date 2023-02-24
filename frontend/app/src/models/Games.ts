@@ -1,6 +1,6 @@
 export default class Game {
     id?: number;
-    steam_image_api?:string;
+    steam_image_api?: string;
     uploaded_game_image?: string;
     appid?: number;
     game_name: string = ""

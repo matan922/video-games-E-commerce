@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PayPalScriptProvider, PayPalButtons   } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectCity,
@@ -13,31 +13,21 @@ import {
 import { toast } from "react-toastify";
 import { orderData } from "../../models/Games";
 
-const MyPaypalButton = ({full_name, address, city, zip, total}: orderData) => {
+const MyPaypalButton = () => {
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCartList);
-  // const { full_name, address, city, zip, total } = useAppSelector((state) => state.order);
+  const { full_name, address, city, zip, total } = useAppSelector(
+    (state) => state.order
+  );
 
-  
-  const onApprove = (data: any,action: any) => {
-    const orderData = {
-      city: city,
-      full_name: full_name,
-      address: address,
-      zip: zip,
-      total: total,
-    }
-
-    console.log(full_name)
-
+  const onApprove = (data: any, action: any) => {
     return action.order?.capture().then((details: any) => {
-      dispatch(orderAsync({ orderData, orderDetails: cart }))
-      toast.success("Success!")
-      localStorage.removeItem("cart")
-      // window.location.replace("/")
-  })
-
-  } 
+      dispatch(orderAsync({ orderDetails: cart }));
+      toast.success("Success!");
+      localStorage.removeItem("cart");
+      window.location.replace("/");
+    });
+  };
 
   const initialOptions = {
     "client-id":
@@ -67,11 +57,11 @@ const MyPaypalButton = ({full_name, address, city, zip, total}: orderData) => {
             });
           }}
           onApprove={onApprove}
-          onError= {() => {
-            toast.error("There was an error with the payment, try again.")
+          onError={() => {
+            toast.error("There was an error with the payment, try again.");
           }}
-          onCancel= {() => {
-            toast.error("Transaction has been cancelled.")
+          onCancel={() => {
+            toast.error("Transaction has been cancelled.");
           }}
         />
       </PayPalScriptProvider>

@@ -15,9 +15,19 @@ import StyledBadge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { selectIsLogged } from "../../Reducers/authSlice";
 import { useNavigate } from "react-router-dom";
-import { selectAddress, selectCity, selectFullName, selectTotal, selectZip, updateAddress, updateCity, updateFullName, updateTotal, updateZip } from "../../Reducers/orderSlice";
+import {
+  selectAddress,
+  selectCity,
+  selectFullName,
+  selectTotal,
+  selectZip,
+  updateAddress,
+  updateCity,
+  updateFullName,
+  updateTotal,
+  updateZip,
+} from "../../Reducers/orderSlice";
 import MyPaypalButton from "../mypaypal/MyPaypalButton";
-
 
 const CartModal = ({ onTotalGamesChange }: any) => {
   const cart = useAppSelector(selectCartList);
@@ -57,24 +67,15 @@ const CartModal = ({ onTotalGamesChange }: any) => {
     }
   };
 
-
-
   const onSubmit = (e: any) => {
     e.preventDefault();
-    const orderData = {
-      full_name: full_name,
-      address: address,
-      city: city,
-      zip: zip,
-      total: total,
-    };
-    if (zip == "" || city == "" || address == "" && full_name == "" ) {
-        toast.error("Fill all the fields please!")
+    if (zip == "" || city == "" || (address == "" && full_name == "")) {
+      toast.error("Fill all the fields please!");
     } else {
-        dispatch(orderAsync({ orderData, orderDetails: cart }));
-        localStorage.removeItem("cart");
-        dispatch(removeAllFromCart(cart));
-        toast.success("Enjoy your new games!");
+      dispatch(orderAsync({ orderDetails: cart }));
+      localStorage.removeItem("cart");
+      dispatch(removeAllFromCart(cart));
+      toast.success("Enjoy your new games!");
     }
   };
 
@@ -88,9 +89,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
 
   useEffect(() => {
     dispatch(updateTotal(getTotalQuantity()));
-  }, [getTotalQuantity()])
-  
-
+  }, [getTotalQuantity()]);
 
   return (
     <div>
@@ -223,7 +222,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
           <Button variant="primary" onClick={handleCloseBillingAndBuy}>
             Buy!
           </Button>
-          <MyPaypalButton full_name={full_name} address={address} city={city} zip={zip} total={total} />
+          <MyPaypalButton />
         </Modal.Footer>
       </Modal>
     </div>

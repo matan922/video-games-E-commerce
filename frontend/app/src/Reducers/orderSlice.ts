@@ -31,8 +31,10 @@ const initialState: ShopState = {
 };
 
 
-export const orderAsync = createAsyncThunk("shop/makeOrder", async (data: { orderData: orderData, orderDetails: CartInterface[] }) => {
-    const response = await makeOrder(data.orderData, data.orderDetails);
+export const orderAsync = createAsyncThunk<any, { orderDetails: CartInterface[] }, { state: RootState }>("shop/makeOrder", async ({ orderDetails }, { getState }) => {
+    const { order: { address, city, zip, full_name, total } } = getState();
+    const orderData = { address, city, zip, full_name, total };
+    const response = await makeOrder(orderData, orderDetails);
     return response.data;
 });
 
@@ -80,25 +82,25 @@ export const orderSlice = createSlice({
             localStorage.removeItem("cart");
         },
 
-        updateFullName: (state,action) => {
+        updateFullName: (state, action) => {
             state.full_name = action.payload
             console.log(state.full_name)
         },
 
-        updateZip: (state,action) => {
+        updateZip: (state, action) => {
             state.zip = action.payload
         },
 
-        updateAddress: (state,action) => {
+        updateAddress: (state, action) => {
             state.address = action.payload
         },
 
-        updateCity: (state,action) => {
+        updateCity: (state, action) => {
             state.city = action.payload
         },
 
-        updateTotal: (state,action) => {
-            
+        updateTotal: (state, action) => {
+
             state.total = action.payload
         },
 
@@ -108,7 +110,6 @@ export const orderSlice = createSlice({
         builder
             .addCase(orderAsync.fulfilled, (state, action) => {
                 state.order = action.payload;
-
             })
     },
 });
