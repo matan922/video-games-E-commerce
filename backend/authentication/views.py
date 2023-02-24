@@ -5,10 +5,9 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes, api_view
+from myproj.decorators.log import logger_decorator
 from .serializers import LogoutSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -18,6 +17,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
+    @logger_decorator
     def get_token(cls, user):
         token = super().get_token(user)
         # Add custom claims
@@ -25,7 +25,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["is_staff"] = user.is_staff
         # ...
         return token
-    
+    @logger_decorator
     def validate(self, attrs):
         data = super().validate(attrs)    
         user = self.user
@@ -44,6 +44,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 # ------------------------- REGISTER START ------------------------- #
 
 class RegisterView(APIView):
+    @logger_decorator
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -62,6 +63,7 @@ class RegisterView(APIView):
         
 
 class RegisterStaffView(APIView):
+    @logger_decorator
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -88,6 +90,7 @@ class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = LogoutSerializer
 
+    @logger_decorator
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -4,27 +4,21 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
 import requests
-from profile_user.serializers import ProfileSerializer
 from .models import Game,Genre, OrderDetail, Order, Review # Genre_Extracted
 from .serializers import GameSerializer, GenreSerializer, OrderDetailSerializer, OrderSerializer, ReviewSerializer # GenreExtractedSerializer
 from rest_framework import status
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model
-from profile_user.models import Profile
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from rest_framework.pagination import PageNumberPagination
-from django.contrib.auth.models import User
 from .pagination import CustomPageNumberPagination
-
+from myproj.decorators.log import logger_decorator
 
 # Create your views here.
 
 
 
 # ------------------------- Genres Start ------------------------
+
 # Get all genres. (categories)
 class Genres(APIView):
+    @logger_decorator
     def get(self, request):
         genres = Genre.objects.all()
         serializer = GenreSerializer(genres, many=True)
@@ -32,12 +26,14 @@ class Genres(APIView):
 
 # Get a single genre.
 class GenreDetail(APIView):
+    @logger_decorator
     def get_object(self, pk):
         try:
             return Genre.objects.get(pk=pk)
         except Genre.DoesNotExist:
             raise Http404
-
+        
+    @logger_decorator
     def get(self, request, pk):
         genre = self.get_object(pk)
         serializer = GenreSerializer(genre)
@@ -54,6 +50,7 @@ class Games(ListAPIView):
     pagination_class = CustomPageNumberPagination
 
     # Get a queryset of all games or filter them in certain ways.
+    @logger_decorator
     def get_queryset(self):
         query = self.request.GET.get("search", None)
         sort = self.request.GET.get("sort", None)
@@ -67,6 +64,7 @@ class Games(ListAPIView):
         return games
 
     # Gets all games (or filtered ones) and paginate them from the queryset above.
+    @logger_decorator
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
@@ -78,6 +76,7 @@ class Games(ListAPIView):
             return Response(serializer.data)
 
     # Post a new game in the shop.
+    @logger_decorator
     def post(self, request):
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
@@ -87,7 +86,7 @@ class Games(ListAPIView):
 
 
 class GameDetail(APIView):
-
+    @logger_decorator
     def get_object(self, pk):
         try:
             return Game.objects.get(pk=pk)
@@ -95,6 +94,7 @@ class GameDetail(APIView):
             raise Http404
         
     # Get single game
+    @logger_decorator
     def get(self, request, pk):
         game = self.get_object(pk)
         serializer = GameSerializer(game)
@@ -105,6 +105,7 @@ class GameDetail(APIView):
         return Response(full_game_info)
 
     # Update a game
+    @logger_decorator
     def put(self, request, pk):
         game = self.get_object(pk)
         serializer = GameSerializer(game, data=request.data)
@@ -114,6 +115,7 @@ class GameDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Delete from shop
+    @logger_decorator
     def delete(self, request, pk):
         game = self.get_object(pk)
         game.delete()
@@ -150,6 +152,7 @@ class GameDetail(APIView):
 
 class OrderGames(APIView):
 # see user's orders.
+    @logger_decorator
     def get(self, request):
         user= request.user
         orders = user.order_set.all()
@@ -157,10 +160,12 @@ class OrderGames(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # create a new order for the authenticated user.
+    @logger_decorator
     def post(self, request):
         # give a context for the user and his order data and saving it in Order table.
         serializer = OrderSerializer(data=request.data["orderData"], context={'user': request.user})
         if serializer.is_valid(raise_exception=True):
+            print("seralizer valid")
             serializer.save()
             # looping through the order details
             for item in request.data["orderDetails"]:
@@ -179,12 +184,13 @@ class OrderGames(APIView):
 
 class ReviewView(APIView):
     serializer_class = ReviewSerializer
-
+    @logger_decorator
     def get(self, request, pk):
         reviews = Review.objects.filter(game=Game.objects.get(id=pk))
         serializer = self.serializer_class(reviews, many=True)
         return Response(serializer.data)
-
+    
+    @logger_decorator
     def post(self, request):
         serializer = ReviewSerializer(data = request.data, context = {"user": request.user})
         if serializer.is_valid(raise_exception=True):
@@ -200,6 +206,7 @@ to not go over the cap of requests to steam by just
 scrolling through the app. (only main game images)
  ''' 
 class SteamGames(APIView):
+    @logger_decorator
     def get(self, request):
         games = Game.objects.all().filter(game_image = "")
         for game in games:

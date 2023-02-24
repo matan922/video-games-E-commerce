@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PayPalScriptProvider, PayPalButtons   } from "@paypal/react-paypal-js";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
@@ -11,23 +11,33 @@ import {
   orderAsync,
 } from "../../Reducers/orderSlice";
 import { toast } from "react-toastify";
+import { orderData } from "../../models/Games";
 
-const MyPaypalButton = () => {
-  const zip = useAppSelector(selectZip);
-  const city = useAppSelector(selectCity);
-  const full_name = useAppSelector(selectFullName);
-  const total = useAppSelector(selectTotal);
-  const address = useAppSelector(selectAddress);
-  const cart = useAppSelector(selectCartList);
+const MyPaypalButton = ({full_name, address, city, zip, total}: orderData) => {
   const dispatch = useAppDispatch();
+  const cart = useAppSelector(selectCartList);
+  // const { full_name, address, city, zip, total } = useAppSelector((state) => state.order);
 
+  
+  const onApprove = (data: any,action: any) => {
+    const orderData = {
+      city: city,
+      full_name: full_name,
+      address: address,
+      zip: zip,
+      total: total,
+    }
 
-  const orderData = {
-    city: city,
-    full_name: full_name,
-    address: address,
-    zip: zip,
-  }
+    console.log(full_name)
+
+    return action.order?.capture().then((details: any) => {
+      dispatch(orderAsync({ orderData, orderDetails: cart }))
+      toast.success("Success!")
+      localStorage.removeItem("cart")
+      // window.location.replace("/")
+  })
+
+  } 
 
   const initialOptions = {
     "client-id":
@@ -56,17 +66,7 @@ const MyPaypalButton = () => {
               },
             });
           }}
-          onApprove={(data: any,actions: any) => {
-            return actions.order?.capture().then((details: any) => {
-                dispatch(orderAsync({ orderData, orderDetails: cart }))
-                toast.success("Success!")
-                localStorage.removeItem("cart")
-                window.location.replace("/")
-            })
-            // .catch((error:any) => {
-            //     toast.error("Error in transaction, please try again.")
-            // })
-          }}
+          onApprove={onApprove}
           onError= {() => {
             toast.error("There was an error with the payment, try again.")
           }}

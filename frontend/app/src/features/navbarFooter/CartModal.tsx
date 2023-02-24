@@ -74,7 +74,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
         dispatch(orderAsync({ orderData, orderDetails: cart }));
         localStorage.removeItem("cart");
         dispatch(removeAllFromCart(cart));
-        toast.success("Enjoy your new games!");    
+        toast.success("Enjoy your new games!");
     }
   };
 
@@ -223,7 +223,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
           <Button variant="primary" onClick={handleCloseBillingAndBuy}>
             Buy!
           </Button>
-          <MyPaypalButton/>
+          <MyPaypalButton full_name={full_name} address={address} city={city} zip={zip} total={total} />
         </Modal.Footer>
       </Modal>
     </div>

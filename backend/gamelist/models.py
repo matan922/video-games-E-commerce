@@ -10,6 +10,8 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.genre_name
+    
+
 
 
 class Game(models.Model):

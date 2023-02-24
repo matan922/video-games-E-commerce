@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from gamelist.pagination import CustomPageNumberPagination
 from gamelist.serializers import GameSerializer
+from myproj.decorators.log import logger_decorator
 from profile_user.serializers import ProfileSerializer
 from .models import Profile
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, RetrieveAPIView
@@ -21,6 +22,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 # Custom permission for Profile
 
 class IsOwnerOrReadOnly(BasePermission):
+    @logger_decorator
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
@@ -36,6 +38,7 @@ class SingleProfile(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     parser_class=(MultiPartParser,FormParser)
 
+    @logger_decorator
     def get_object(self):
         if 'pk' in self.kwargs:
             profile = get_object_or_404(Profile, pk=self.kwargs.get('pk'))
@@ -45,12 +48,14 @@ class SingleProfile(RetrieveUpdateAPIView):
             raise NotAuthenticated
         
         return profile
-
+    
+    @logger_decorator
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @logger_decorator
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.user.id != request.user.id:
@@ -69,7 +74,7 @@ class ProfileList(ListAPIView):
     permission_classes = [AllowAny]
     pagination_class = CustomPageNumberPagination
 
-
+    @logger_decorator
     def get_queryset(self):
         query = self.request.GET.get("search", None)
         profiles = Profile.objects.all()
@@ -77,6 +82,7 @@ class ProfileList(ListAPIView):
             profiles = Profile.objects.filter(display_name__icontains=query)
         return profiles
     
+    @logger_decorator
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)

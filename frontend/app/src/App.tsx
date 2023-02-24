@@ -4,7 +4,12 @@ import { useAppDispatch, useAppSelector } from "./app/hooks";
 import MyNavbar from "./features/navbarFooter/MyNavbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { isLoggedOn, isLoggedOff } from "./Reducers/authSlice";
+import {
+  isLoggedOn,
+  isLoggedOff,
+  selectIsStaff,
+  staffLoggedOn,
+} from "./Reducers/authSlice";
 import { loadCart, orderAsync } from "./Reducers/orderSlice";
 import Footer from "./features/navbarFooter/Footer";
 import { Container } from "react-bootstrap";
@@ -22,22 +27,24 @@ import { MyToken } from "./models/InterfaceAuth";
 const Shop = React.lazy(() => import("./features/shop/Shop"));
 const Community = React.lazy(() => import("./features/community/Community"));
 
-const initialOptions = {
-  "client-id": 1,
-  currency: "USD",
-  intent: "capture",
-};
-
 function App() {
   const dispatch = useAppDispatch();
-
   const myToken = JSON.parse(localStorage.getItem("token") as string);
+  console.log(myToken)
   const accessToken = myToken?.access;
 
   useEffect(() => {
     if (accessToken) {
-      dispatch(isLoggedOn());
+      const decoded: MyToken = jwt_decode(accessToken);
+      if (accessToken) {
+        if (decoded.is_staff) {
+          dispatch(staffLoggedOn());
+        } else {
+          dispatch(isLoggedOn());
+        }
+      }  
     }
+    
     if (accessToken == null) {
       dispatch(isLoggedOff());
     }
@@ -46,7 +53,6 @@ function App() {
   useEffect(() => {
     dispatch(loadCart());
   }, [dispatch]);
-
 
   return (
     <div>

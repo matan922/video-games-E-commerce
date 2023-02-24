@@ -87,11 +87,12 @@ export const authSlice = createSlice({
       state.userName = localStorage.getItem('userName') as string;
     },
 
-    // adminLoggedOn: (state) => {
-    //   state.isLogged = true;
-    //   state.isStaff = true;
-    //   state.userName = localStorage.getItem('userName') as string;
-    // },
+    staffLoggedOn: (state) => {
+      state.isLogged = true;
+      state.isStaff = true;
+      state.userName = localStorage.getItem('userName') as string;
+    },
+
 
   },
   extraReducers: (builder) => {
@@ -131,6 +132,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         const decoded: MyToken = jwt_decode(action.payload.access);
+        console.log(action.payload.access)
         state.userId = decoded.user_id;
         state.isStaff = decoded.is_staff;
         state.userName = decoded.username;
@@ -154,7 +156,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, isLoggedOn, isLoggedOff, resetAccountToFalse } = authSlice.actions;
+export const { reset, isLoggedOn, isLoggedOff, resetAccountToFalse, staffLoggedOn } = authSlice.actions;
 export const selectIsLogged = (state: RootState) => state.auth.isLogged;
 export const selectUserName = (state: RootState) => state.auth.userName;
 export const selectAccess = (state: RootState) => state.auth.access;

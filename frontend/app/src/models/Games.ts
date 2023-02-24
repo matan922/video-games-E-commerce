@@ -33,6 +33,7 @@ export interface orderData {
     address: string;
     city: string;
     zip: string;
+    total: number;
 }
 
 export interface CartInterface {

@@ -82,6 +82,7 @@ export const orderSlice = createSlice({
 
         updateFullName: (state,action) => {
             state.full_name = action.payload
+            console.log(state.full_name)
         },
 
         updateZip: (state,action) => {
