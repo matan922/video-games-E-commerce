@@ -1,20 +1,21 @@
 # base image
-FROM node:14-alpine
+FROM node:14
 
 # set working directory
 WORKDIR /app
 
 # add package.json and package-lock.json
-COPY package*.json ./
+# COPY package*.json ./
+COPY . .
 
 # install dependencies
 RUN npm install
 
 # copy the rest of the application code
-COPY . .
+# COPY . .
 
 # build the production version of the application
-RUN npm run build
+# RUN npm run build
 
 # start the application
 CMD ["npm", "start"]

@@ -19,9 +19,11 @@ services:
     build: 
       context: ./frontend/app
       dockerfile: Dockerfile
-    command: npm start
-    volumes:
-      - .:/app
+    # command: npm start
+    command: ls
+    working_dir: /frontend
+    # volumes:
+    #   - .:/app
     ports:
       - "3000:3000"
     depends_on:
@@ -31,9 +33,11 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: ls
+    working_dir: /backend
+    # volumes:
+    #   - .:/app
     ports:
       - "8000:8000"
     environment:

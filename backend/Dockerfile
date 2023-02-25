@@ -1,11 +1,13 @@
 # base image
-FROM python:3.9-alpine
+FROM python:3.9-buster
 
 # set working directory
 WORKDIR /app
 
 # add requirements.txt
 COPY requirements.txt .
+
+# RUN apt-get install default-libmysqlclient-dev
 
 # install dependencies
 RUN pip install -r requirements.txt
