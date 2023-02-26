@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import Http404
 import requests
-from .models import Game,Genre, OrderDetail, Order, Review # Genre_Extracted
+from .models import Game,Genre, Order, Review # Genre_Extracted
 from .serializers import GameSerializer, GenreSerializer, OrderDetailSerializer, OrderSerializer, ReviewSerializer # GenreExtractedSerializer
 from rest_framework import status
 from .pagination import CustomPageNumberPagination
@@ -13,8 +13,6 @@ from .pagination import CustomPageNumberPagination
 from myproj.decorators.log import logger_decorator
 
 # Create your views here.
-
-
 
 # ------------------------- Genres Start ------------------------
 
@@ -124,32 +122,6 @@ class GameDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # ------------------------- Games End ---------------------------
-
-
-# ------------------------- Genre_Extracted Start -------------------
-
-# class ExtractedGenres(APIView):
-#     def get(self, request):
-#         genres = Genre_Extracted.objects.all()
-#         serializer = GenreExtractedSerializer(genres, many=True)
-#         return Response(serializer.data)
-
-# class ExtractedGenreDetail(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return Genre_Extracted.objects.get(pk=pk)
-#         except Genre_Extracted.DoesNotExist:
-#             raise Http404
-
-#     def get(self, request, pk):
-#         genre = self.get_object(pk)
-#         serializer = GenreExtractedSerializer(genre)
-#         return Response(serializer.data)
-
-
-# ------------------------- Genre_Extracted End -------------------
-
-
 
 
 class OrderGames(APIView):
