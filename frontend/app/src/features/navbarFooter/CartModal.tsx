@@ -29,6 +29,8 @@ import {
 } from "../../Reducers/orderSlice";
 import MyPaypalButton from "../mypaypal/MyPaypalButton";
 
+// this is the code for the cart and payment process
+
 const CartModal = ({ onTotalGamesChange }: any) => {
   const cart = useAppSelector(selectCartList);
   const isLogged = useAppSelector(selectIsLogged);
@@ -220,7 +222,7 @@ const CartModal = ({ onTotalGamesChange }: any) => {
             Close
           </Button>
           <Button variant="primary" onClick={handleCloseBillingAndBuy}>
-            Buy!
+            Buy! (without paypal)
           </Button>
           <MyPaypalButton />
         </Modal.Footer>

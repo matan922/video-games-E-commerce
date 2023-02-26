@@ -40,7 +40,7 @@ const MyPaypalButton = () => {
     <div>
       <PayPalScriptProvider options={initialOptions}>
         <PayPalButtons
-          disabled={!(zip && city && full_name && address)}
+          disabled={!(zip && city && full_name && address) || total === 0}
           createOrder={(data, actions) => {
             return actions.order.create({
               purchase_units: [
