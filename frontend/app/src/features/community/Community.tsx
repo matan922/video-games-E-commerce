@@ -25,9 +25,6 @@ const Community = () => {
         dispatch(getAllProfilesAsync({ searchQuery: profileSearch, pageNumber: currentPage }))
     };
 
-    useEffect(() => {
-        console.log(profiles.map(profile => profile.avatar))
-    }, [])
     
 
     return (
@@ -56,7 +53,7 @@ const Community = () => {
                                 <Card.Body>
                                     <Card.Text>
                                         <div key={i}>
-                                            <img style={{ width: "70px", height: "73px" }} src={profile?.avatar} alt='placeholder.png' /><span className='ps-4 fs-3'>{profile.display_name}</span>
+                                            <img style={{ width: "70px", height: "73px" }} src={profile.avatar} alt='placeholder.png' /><span className='ps-4 fs-3'>{profile.display_name}</span>
                                         </div>
                                     </Card.Text>
                                 </Card.Body>
