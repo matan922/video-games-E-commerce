@@ -14,7 +14,7 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import StyledBadge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { selectIsLogged } from "../../Reducers/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   selectAddress,
   selectCity,
@@ -58,15 +58,8 @@ const CartModal = ({ onTotalGamesChange }: any) => {
   };
 
   const handleCloseBillingAndBuy = (e: any) => {
-    if (!isLogged) {
-      setShowBilling(false);
-      navigate("/login_page");
-      toast.info("Log in first please.");
-    } else {
-      console.log("first");
-      setShowBilling(false);
-      onSubmit(e);
-    }
+    setShowBilling(false);
+    onSubmit(e);
   };
 
   const onSubmit = (e: any) => {
@@ -221,10 +214,18 @@ const CartModal = ({ onTotalGamesChange }: any) => {
           <Button variant="secondary" onClick={handleCloseBilling}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleCloseBillingAndBuy}>
-            Buy! (without paypal)
-          </Button>
-          <MyPaypalButton />
+          {isLogged ? (
+            <div>
+              <Button variant="primary" onClick={handleCloseBillingAndBuy}>
+                Buy! (without paypal)
+              </Button>
+              <MyPaypalButton />
+            </div>
+          ) : (
+            <Button onClick={() => navigate("/login_page")}>
+              Log in to purchase
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </div>
