@@ -86,12 +86,13 @@ class ProfileList(ListAPIView):
     @logger_decorator
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+        serializer_context = {'request': request}  # pass request object to serializer context
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = ProfileSerializer(page, many=True)
+            serializer = ProfileSerializer(page, many=True, context=serializer_context)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = ProfileSerializer(queryset, many=True)
+            serializer = ProfileSerializer(queryset, many=True, context=serializer_context)
             return Response(serializer.data)
 
         
