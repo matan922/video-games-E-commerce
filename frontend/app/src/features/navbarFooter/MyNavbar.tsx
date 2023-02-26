@@ -63,7 +63,7 @@ function MyNavbar() {
             </Nav>
             <Nav className="me-end">
               <CartModal onTotalGamesChange={storageGame} />
-              {isStaff ? <Nav.Link as={Link} to={"http://127.0.0.1:8000/admin/"}>Admin Page</Nav.Link> : null}
+              {isStaff ? <Nav.Link as={Link} to={"https://steam-like-serverback.onrender.com/admin/"}>Admin Page</Nav.Link> : null}
               {isLogged ? <Navbar.Text>Welcome {username}</Navbar.Text> : (<Nav.Link as={Link} to="/register/">Register</Nav.Link>)} &nbsp;
               {isLogged ? (<Button variant="danger" onClick={() => onLogout()}>Logout</Button>) : (<Nav.Link as={Link} to="/login_page/">Login</Nav.Link>)}
             </Nav>
