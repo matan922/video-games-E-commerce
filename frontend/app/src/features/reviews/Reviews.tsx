@@ -49,9 +49,13 @@ const Reviews = () => {
     if (data.comment == "" || data.rating == 0) {
       toast.error("Fill the form.");
     } else {
-      dispatch(postReviewAsync(data));
-      toast.success("Successfuly added your review!");
-      dispatch(reset())
+      try {
+        dispatch(postReviewAsync(data));
+        toast.success("Review has been posted!")
+        dispatch(reset());
+      } catch {
+        dispatch(reset());
+      }
     }
   };
 

@@ -25,7 +25,7 @@ const Community = () => {
         dispatch(getAllProfilesAsync({ searchQuery: profileSearch, pageNumber: currentPage }))
     };
 
-    
+    console.log(profiles.map(profile => profile.avatar))
 
     return (
         <div>
