@@ -7,9 +7,12 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from myproj.decorators.log import logger_decorator
 from .serializers import LogoutSerializer
 from rest_framework.exceptions import AuthenticationFailed
+
+# custom made logger using decorator.
+from myproj.decorators.log import logger_decorator
+
 
 
 

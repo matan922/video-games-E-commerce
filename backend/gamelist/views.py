@@ -8,6 +8,8 @@ from .models import Game,Genre, OrderDetail, Order, Review # Genre_Extracted
 from .serializers import GameSerializer, GenreSerializer, OrderDetailSerializer, OrderSerializer, ReviewSerializer # GenreExtractedSerializer
 from rest_framework import status
 from .pagination import CustomPageNumberPagination
+
+# custom made logger using decorator.
 from myproj.decorators.log import logger_decorator
 
 # Create your views here.

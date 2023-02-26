@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from gamelist.pagination import CustomPageNumberPagination
 from gamelist.serializers import GameSerializer
-from myproj.decorators.log import logger_decorator
 from profile_user.serializers import ProfileSerializer
 from .models import Profile
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, RetrieveAPIView
@@ -13,14 +12,16 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
+# custom made logger using decorator.
+from myproj.decorators.log import logger_decorator
+
 
 
 
 # Create your views here.
 
 
-# Custom permission for Profile
-
+# Custom permissions for Profile
 class IsOwnerOrReadOnly(BasePermission):
     @logger_decorator
     def has_object_permission(self, request, view, obj):
