@@ -222,7 +222,12 @@ const CartModal = ({ onTotalGamesChange }: any) => {
               <MyPaypalButton />
             </div>
           ) : (
-            <Button onClick={() => navigate("/login_page")}>
+            <Button
+              onClick={() => {
+                setShowBilling(false);
+                navigate("/login_page");
+              }}
+            >
               Log in to purchase
             </Button>
           )}
