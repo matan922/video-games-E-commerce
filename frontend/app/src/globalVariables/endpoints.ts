@@ -20,9 +20,9 @@ export const steamGames = "https://steam-like-serverback.onrender.com/games_list
 
 
 // reviews endpoints
-export const reviewGet = "/games_list/reviews/"
-export const reviewPost = "/games_list/new_review/"
+export const reviewGet = "https://steam-like-serverback.onrender.com/games_list/reviews/"
+export const reviewPost = "https://steam-like-serverback.onrender.com/games_list/new_review/"
 
 
 
-export const postNewGame = "/games_list/games/";
+export const postNewGame = "https://steam-like-serverback.onrender.com/games_list/games/";
