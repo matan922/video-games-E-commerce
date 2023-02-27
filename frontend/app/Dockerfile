@@ -1,20 +1,13 @@
-# base image
-FROM node:14-alpine
+FROM node:18.14.0-alpine
 
-# set working directory
-WORKDIR /app
+RUN apk update 
 
-# add package.json and package-lock.json
-COPY package*.json ./
+WORKDIR /project/frontend/app
 
-# install dependencies
-RUN npm install
-
-# copy the rest of the application code
 COPY . .
 
-# build the production version of the application
-RUN npm run build
+RUN npm install
 
-# start the application
+EXPOSE 3000
+
 CMD ["npm", "start"]

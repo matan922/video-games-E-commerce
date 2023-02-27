@@ -1,49 +1,30 @@
-version: '3'
+version: "3.9"
 
 services:
-  db:
+  backend:
     build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      MYSQL_DATABASE: 'db_name'
-      MYSQL_USER: 'db_user'
-      MYSQL_PASSWORD: 'db_password'
-      MYSQL_ROOT_PASSWORD: 'root_password'
-    ports:
-      - "3306:3306"
-    image: mysql:8
-
-
-  web:
-    build: 
-      context: ./frontend/app
-      dockerfile: Dockerfile
-    # command: npm start
-    command: ls
-    working_dir: /frontend
-    # volumes:
-    #   - .:/app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-
-  api:
-    build: 
       context: ./backend
       dockerfile: Dockerfile
-    # command: python manage.py runserver 0.0.0.0:8000
-    command: ls
-    working_dir: /backend
-    # volumes:
-    #   - .:/app
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - database:/app/db
     environment:
-      - DB_HOST=db
-      - DB_NAME=db_name
-      - DB_USER=db_user
-      - DB_PASSWORD=db_password
+      - DEBUG=1
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend/app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
     depends_on:
-      - db
+      - backend
+    restart: always
+
+volumes:
+  database:
