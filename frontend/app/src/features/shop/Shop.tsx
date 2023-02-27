@@ -31,13 +31,13 @@ const Shop = () => {
 
   useEffect(() => {
     const searchQuery = ""
-    dispatch(getGamesAsync({ page: currentPage, searchQuery: searchQuery, sortQuery: genreSort }))
-  }, [dispatch, genreSort]);
+    dispatch(getGamesAsync({ page: currentPage ? currentPage : 1, searchQuery: searchQuery, sortQuery: genreSort }))
+  }, [dispatch, genreSort, currentPage]);
 
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(getGamesAsync({ page: currentPage, searchQuery: searchGame, sortQuery: genreSort }))
+    dispatch(getGamesAsync({ page: currentPage ? currentPage : 1, searchQuery: searchGame, sortQuery: genreSort }))
   };
 
   return (

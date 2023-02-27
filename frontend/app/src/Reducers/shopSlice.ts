@@ -70,6 +70,7 @@ export const shopSlice = createSlice({
 
     updateGenreSort: (state, action: PayloadAction<string>) => {
       state.genreSort = action.payload;
+      state.currentPage = 1;
     },
     resetGame: (state) => {
       state.game = {}
