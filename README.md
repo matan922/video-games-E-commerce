@@ -1,6 +1,8 @@
 # Video Game online store - Matan Tenenbaum
 
-My video game store is inspired mainly by Steam (big online store for video games)
+My video game store is inspired mainly by Steam
+(huge online store for video games)
+using Steam's API to get information on the games and populating the database with their images. 
 It's a full-stack web application built using Django, Django Rest-framework module, React with TypeScript, Redux for state managing and MySQL. (PostgreSQL in its 'deploy-ready' branch of the git)
 
 ## Demo/Live app
@@ -19,6 +21,11 @@ user: matan
 password: 123
 
 (for both demo site and localhost one)
+
+## Paypal fake account:
+email: matanten@gmail.com
+password: 12341234
+
 # Setup:
 first make sure you have Python3 installed.  
 download a module to store your dependencies in:
@@ -62,3 +69,12 @@ Run the server using:
 
 # Setup-frontend
 
+## npm i:
+First you want to navigate into the "frontend" directory and then into "app" directory inside "app" in the terminal enter:
+* npm i
+
+## npm start
+After it finishes downloading all of the dependencies enter in the terminal:
+* npm start
+
+That's it you are done!
