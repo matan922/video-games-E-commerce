@@ -10,7 +10,7 @@ Site is live at
 https://precious-queijadas-5fa22b.netlify.app/
 
 ## Key Features
-* Built with Django, DRF, React with TypeScript, Redux and MySQL.
+* Built with Django, DRF, React with TypeScript, Redux, MySQL and Docker.
 * Authentication system that lets the user create his own account and profile and add games to his cart and purchase them.
 * Profile system that allows you to change info like profile picture or bio it also shows the games a user has bought.
 * Custom logger and decorator for it.
