@@ -8,6 +8,7 @@ It's a full-stack web application built using Django, Django Rest-framework modu
 ## Demo/Live app
 Site is live at 
 https://precious-queijadas-5fa22b.netlify.app/
+for the deploy-ready branch this link is the only thing you need here!
 
 ## Key Features
 * Built with Django, DRF, React with TypeScript, Redux and MySQL.
